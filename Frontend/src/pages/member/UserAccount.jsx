@@ -1,5 +1,6 @@
 
 import withAuthFetch from "../../HOC/withAuthFetch";
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import MemberSidebar from "../../components/MemberSidebar";
@@ -8,25 +9,25 @@ import MemberSidebar from "../../components/MemberSidebar";
 function UserAccount({authFetch}){
 
     const [account,setAccount]=useState({})
-    const [error,setError]=useState('')
 
     
 
     async function loadaccount(){
-        setError('')
+        toast.error('')
             try{
 
             const response = await authFetch('http://localhost:3000/api/users/myaccount')
             const data=await response.json()
 
             if(!response.ok){
-                setError('Error while fetching')
+                toast.error('Error while fetching')
             }
 
             setAccount(data)
 
         }catch(err){
             console.log(err)
+            toast.error('Something went wrong while loading')
         }
     }
 
@@ -67,7 +68,6 @@ function UserAccount({authFetch}){
                         <br/>
                 </div>
                 <br/>
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>
         </div>
     )

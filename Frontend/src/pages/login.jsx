@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 import logo from '../assets/logo.png'
 
@@ -6,12 +7,10 @@ function Login(){
 
     const [username,setUsername]=useState("")
     const [password,setPassword]=useState("")
-    const [error,setError]=useState('')
     const navigate=useNavigate()
 
     async function handleSubmit(event){
         event.preventDefault() 
-        setError('')
 
         try{
             const response=await fetch('http://localhost:3000/api/login',{
@@ -24,7 +23,7 @@ function Login(){
             const data=await response.json()
 
             if(!response.ok){
-                setError(data.message || 'login failed')
+                toast.error(data.message || 'login failed')
                 return
             }
 
@@ -39,7 +38,7 @@ function Login(){
 
         }catch(err){
             console.log(err)
-            setError('somethiong went wrong,try Again')
+            toast.error('somethiong went wrong,try Again')
         }
 
         
@@ -52,13 +51,12 @@ function Login(){
             <div className="page-container">
                 <h1 className="normal-text">Login Page</h1>
                 <form onSubmit={handleSubmit} >
-                    <input className="form-input" value={username} onChange={(e)=>{setUsername(e.target.value),setError('')}} placeholder="username"/><br></br>
+                    <input className="form-input" value={username} onChange={(e)=>setUsername(e.target.value)} placeholder="username"/><br></br>
                     <br></br>
-                    <input className="form-input" value={password} onChange={(e)=>{setPassword(e.target.value),setError('')}} type="password" placeholder="password"/><br></br>
+                    <input className="form-input" value={password} onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="password"/><br></br>
                     <br></br>
                     <button className="btn" type="submit">Login</button>
                 </form>
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>
         </div>
     )

@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { useNavigate} from "react-router-dom"
+import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header";
 import LibrarianSidebar from "../../components/Librariansidebar";
@@ -8,15 +8,8 @@ import LibrarianSidebar from "../../components/Librariansidebar";
 function ViewBorrow({authFetch}){
 
     const [borrowList,setBorrowList]=useState([])
-    const [error,setError]=useState('')
-    const navigate=useNavigate()
-
-    function handlenavigate(){
-        return navigate('/librarian/dashboard')
-    }
 
     async function handleborrowhistory(){
-        setError('')
 
         try{
             const response=await authFetch(`http://localhost:3000/api/borrow/logs`)
@@ -24,14 +17,14 @@ function ViewBorrow({authFetch}){
             const data=await response.json()
 
             if(!response.ok){
-                setError('Something went wrong while fetching')
+                toast.error('Something went wrong while fetching')
                 return
             }
 
             setBorrowList(data)
         }catch(err){
             console.log(err)
-            setError('Something went wrong ,try again')
+            toast.error('Something went wrong ,try again')
         }
     }
 
@@ -72,7 +65,6 @@ function ViewBorrow({authFetch}){
                             ))}
                         </tbody>
                     </table>
-                    {error && <p style={{color:'red'}}>{error}</p>}
                 </div>
             </div>
     )

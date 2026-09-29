@@ -2,14 +2,13 @@ import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 import { useEffect, useState } from "react"
 import authFetch from "../../utils/authFetch"
+import { toast } from "react-toastify"
 
 function AdminDashboard(){
 
     const [stats,setStats]=useState({})
-    const [error,setError]=useState('')
     // total_books,avctive_book,total_librarian,active_librarian,total_users,active_users,book_issued_count,deleted_member
     async function handlestats(){
-        setError('')
         try{
 
             const response=await authFetch('http://localhost:3000/api/admin/stats')
@@ -17,13 +16,13 @@ function AdminDashboard(){
             const data=await response.json()
 
             if(!response.ok){
-                setError('error For fetching data')
+                toast.error('error For fetching data')
                 return
             }
             setStats(data)
         }catch(err){
             console.log(err)
-            setError('Something went wrong while fetching')
+            toast.error('Something went wrong while fetching')
         }
     }
     useEffect(()=>{
@@ -68,7 +67,6 @@ function AdminDashboard(){
                     <h1>{stats.deleted_member}</h1>
                 </div>
             </div>
-            {error && <p style={{color:'red'}}>{error}</p>}
         </div>
     )
 }

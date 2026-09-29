@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 
 function ViewBook({authFetch}){
     const [booklist,setBookList]=useState([])
-    const [error,setError]=useState('')
     const navigate=useNavigate()
    
    
     
     async function handleviewbook(){
-        setError('')
 
         try{
 
@@ -22,7 +21,7 @@ function ViewBook({authFetch}){
 
         }catch(err){
             console.log(err)
-            setError('somethiong went wrong,try Again')
+            toast.error('somethiong went wrong,try Again')
         }
     } 
 
@@ -36,7 +35,7 @@ function ViewBook({authFetch}){
             const data= await response.json()
 
             if(!response.ok){
-                setError('Issue with data fetching')
+                toast.error('Issue with data fetching')
                 return
             }
 
@@ -46,7 +45,7 @@ function ViewBook({authFetch}){
             
         }catch(err){
             console.log(err)
-            setError('Book is still active')
+            toast.error('Book is still active')
         }
     } 
 
@@ -109,7 +108,6 @@ function ViewBook({authFetch}){
                         ))}
                     </tbody>
                 </table>
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>  
        </div>
     )

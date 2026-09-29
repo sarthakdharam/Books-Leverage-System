@@ -1,21 +1,16 @@
 import { useEffect, useState } from "react"
 import withAuthFetch from "../../HOC/withAuthFetch"
-import { Link ,useNavigate} from "react-router-dom"
+import { toast } from "react-toastify"
+import { useNavigate} from "react-router-dom"
 import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 
 function ViewLibrarian({authFetch}){
     const [librarianList,setLibrarianList]=useState([])
-    const [error,setError]=useState('')
-    const navigate=useNavigate()
 
-    function handlenavigate(){
-        return navigate('/admin/dashboard')
-    }
    
     
     async function handleviewlibrarian(){
-        setError('')
 
         try{
 
@@ -25,7 +20,7 @@ function ViewLibrarian({authFetch}){
 
         }catch(err){
             console.log(err)
-            setError('somethiong went wrong,try Again')
+            toast.error('somethiong went wrong,try Again')
         }
     }
     
@@ -36,7 +31,7 @@ function ViewLibrarian({authFetch}){
             })
             const data=await response.json()
             if(!response.ok){
-                setError('Error while fetching')
+                toast.error('Error while fetching')
                 return
             }
             setLibrarianList(prevlist=>
@@ -44,7 +39,7 @@ function ViewLibrarian({authFetch}){
             )
         }catch(err){
             console.log(err)
-            setError('Librarain is still active')
+            toast.error('Librarain is still active')
         }
     }
 
@@ -90,7 +85,6 @@ function ViewLibrarian({authFetch}){
                         ))}
                     </tbody>
                 </table>
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>  
        </div>
     )

@@ -1,5 +1,5 @@
 
-
+import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
 import withAuthFetch from "../../HOC/withAuthFetch"
 
@@ -7,10 +7,8 @@ function SearchBook({authFetch}){
 
     const [search,setSearch]=useState([])
     const [query,setQuery]=useState('')
-    const [error,setError]=useState('')
 
     async function  handlesearch(searchTerm){
-        setError('')
 
         try{
 
@@ -18,14 +16,14 @@ function SearchBook({authFetch}){
             const data=await response.json()
 
             if(!response.ok){
-                setError('Error while fetching book for search')
+                toast.error('Error while fetching book for search')
                 return
             }
             setSearch(data)
 
         }catch(err){
             console.log(err)
-            setError('Something went wrong, try again')
+            toast.error('Something went wrong, try again')
         }
     }
 
@@ -51,7 +49,6 @@ function SearchBook({authFetch}){
                         </div>
                     ))}
                 </div>             
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>
     )
 }

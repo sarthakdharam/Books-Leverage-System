@@ -1,15 +1,14 @@
 import Header from "../../components/Header"
 import LibrarianSidebar from "../../components/Librariansidebar"
 import { useState,useEffect } from "react"
+import { toast } from "react-toastify"
 import authFetch from "../../utils/authFetch"
 
 function LibrarianDashboard(){
 
     const [stats,setStats]=useState({})
-    const [error,setError]=useState('')
     // totalMembers, activeMembers, issuedToday, currentlyBorrowed, overdue, dueSoon
     async function handlestats(){
-        setError('')
         try{
 
             const response=await authFetch('http://localhost:3000/api/librarian/stats')
@@ -17,13 +16,13 @@ function LibrarianDashboard(){
             const data=await response.json()
 
             if(!response.ok){
-                setError('error For fetching data')
+                toast.error('error For fetching data')
                 return
             }
             setStats(data)
         }catch(err){
             console.log(err)
-            setError('Something went wrong while fetching')
+            toast.error('Something went wrong while fetching')
         }
     }
     useEffect(()=>{
@@ -60,7 +59,6 @@ function LibrarianDashboard(){
                 </div>
                 
             </div>        
-        {error && <p style={{color:'red'}}>{error}</p>}
         </div>
         
     )

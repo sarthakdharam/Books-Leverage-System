@@ -1,5 +1,4 @@
-
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
@@ -9,32 +8,22 @@ import LibrarianSidebar from "../../components/Librariansidebar"
 function MyAccount({authFetch}){
 
     const [account,setAccount]=useState({})
-    const [error,setError]=useState('')
-    const navigate=useNavigate()
-
-    function handlenavigate(){
-        return navigate('/librarian/dashboard')
-    }
-
-    function handleclick(){
-        return navigate('/librarian/update')
-    }
 
     async function loadaccount(){
-        setError('')
             try{
 
             const response = await authFetch('http://localhost:3000/api/librarian/myaccount')
             const data=await response.json()
 
             if(!response.ok){
-                setError('Error while fetching')
+                toast.error('Error while fetching')
             }
 
             setAccount(data)
 
         }catch(err){
             console.log(err)
+            toast.error('something went wrong while fecthing my info')
         }
     }
 
@@ -77,11 +66,8 @@ function MyAccount({authFetch}){
                             </div>
                         </div>
                         <br/>
-                
-                    <button className="btn" onClick={handleclick}>Edit</button>
                 </div>
                 <br/>
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>
         </div>
     )

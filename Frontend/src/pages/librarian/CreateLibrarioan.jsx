@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header"
+import { toast } from "react-toastify"
 import AdminSidebar from "../../components/Adminsidebar"
 
 
@@ -13,56 +13,49 @@ function CreateLibrarian({authFetch}){
     const [username,setUsername]=useState('')
     const [password,setPassword]=useState('')
     const [branch,setBranch]=useState('')
-    const [error,setError]=useState('')
-    const [success,setSuccess]=useState('')
-    const navigate=useNavigate()
 
-    function handlenavigate(){
-        return navigate('/admin/dashboard')
-    }
 
     async function handleCreate(event){
         event.preventDefault()
-        setError('')
         if(name.trim()===''){
-            setError('Enter name of librarian')
+            toast.error('Enter name of librarian')
             return
         }
 
         if(email.trim()===''){
-            setError('Enter email of librarian')
+            toast.error('Enter email of librarian')
             return
         }
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/
 
         if(!emailPattern.test(email.trim())){
-            setError('Enter a valid email address')
+            toast.error('Enter a valid email address')
             return
         }
 
         if(phone.trim()===''){
-            setError('Enter phone number of librarian')
+            toast.error('Enter phone number of librarian')
             return
         }
         if(phone.trim().length!==10){
-            setError('Phone number should be of 10 digit')
+            toast.error('Phone number should be of 10 digit')
             return
         }
 
         if(username.trim()===''){
-            setError('Enter username of librarian')
+            toast.error('Enter username of librarian')
             return
         }
         
 
         if(password.trim()===''){
-            setError('Enter password for librarian')
+            toast.error('Enter password for librarian')
             return
         }
         
 
         if(branch.trim()===''){
-            setError('Enter name of branch')
+            toast.error('Enter name of branch')
             return
         }
 
@@ -79,17 +72,10 @@ function CreateLibrarian({authFetch}){
             const data=await response.json()
 
             if(!response.ok){
-                setError(data.message || 'something failed')
-                setName('')
-                setEmail('')
-                setPhone('')
-                setUsername('')
-                setPassword('')
-                setBranch('')
-
+                toast.error(data.message || 'something failed')
                 return
             }
-            setSuccess('Librarian Successfully Created')
+            toast.success('Librarian Successfully Created')
             setName('')
             setEmail('')
             setPhone('')
@@ -99,7 +85,7 @@ function CreateLibrarian({authFetch}){
 
         }catch(err){
             console.log(err)
-            setError('somethiong went wrong,try Again')
+            toast.error('somethiong went wrong,try Again')
         }
     }
 
@@ -112,24 +98,21 @@ function CreateLibrarian({authFetch}){
                 <h3>Create Librarian</h3>   
                 <form onSubmit={handleCreate}>
                     <h4>Librarian Name:</h4>    
-                    <input className="form-input" value={name} onChange={(e)=>{setName(e.target.value),setError('')}} placeholder="Librarian Name"/>
+                    <input className="form-input" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Librarian Name"/>
                     <h4>Librarian email:</h4>    
-                    <input className="form-input" value={email} onChange={(e)=>{setEmail(e.target.value),setError('')}} placeholder="email"/>
+                    <input className="form-input" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="email"/>
                     <h4>Librarian phone No.:</h4>    
-                    <input className="form-input" value={phone} onChange={(e)=>{setPhone(e.target.value),setError('')}} placeholder="Phone No."/>
+                    <input className="form-input" value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder="Phone No."/>
                     <h4>Librarian Username:</h4>    
-                    <input className="form-input" value={username} onChange={(e)=>{setUsername(e.target.value),setError('')}} placeholder="Librarian Username"/>
+                    <input className="form-input" value={username} onChange={(e)=>setUsername(e.target.value)} placeholder="Librarian Username"/>
                     <h4>Librarian Password:</h4>    
-                    <input className="form-input" value={password} type="password" onChange={(e)=>{setPassword(e.target.value),setError('')}} placeholder="Password"/>
+                    <input className="form-input" value={password} type="password" onChange={(e)=>setPassword(e.target.value)} placeholder="Password"/>
                     <h4>Librarian Branch:</h4>    
-                    <input className="form-input" value={branch} onChange={(e)=>{setBranch(e.target.value),setError('')}} placeholder="Branch"/>
-                    <br/>
+                    <input className="form-input" value={branch} onChange={(e)=>setBranch(e.target.value)} placeholder="Branch"/>
+                    
                     <br/>
                     <button className="btn">Submit</button>
                 </form>  
-                <br/> 
-                {error && <p style={{color:'red'}}>{error}</p>}
-                {success && <p style={{color:'green'}}>{success}</p>}
             </div>
         </div>
     )

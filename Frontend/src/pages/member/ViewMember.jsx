@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 import withAuthFetch from "../../HOC/withAuthFetch"
-import { useNavigate } from "react-router-dom"
 import Header from "../../components/Header"
 import LibrarianSidebar from "../../components/Librariansidebar"
 
 function ViewMember({authFetch}){
     const [userList,setUserList]=useState([])
-    const [error,setError]=useState('')
+   
     const [loading,setLoading]=useState(false)
-    const navigate=useNavigate()
-
-    function handlenavigate(){
-        return navigate('/librarian/dashboard')
-    }
+    
    
     
     async function handleviewuser(){
-        setError('')
+        
         setLoading(true)
         
 
@@ -27,14 +23,14 @@ function ViewMember({authFetch}){
             const data=await response.json()
             
             if(!response.ok){
-                setError('error while fetching')
+                toast.error('error while fetching')
                 return
             }
             setUserList(data)
 
         }catch(err){
             console.log(err)
-            setError('somethiong went wrong,try Again')
+            toast.error('somethiong went wrong,try Again')
         }finally{
             setLoading(false)
         }
@@ -47,7 +43,7 @@ function ViewMember({authFetch}){
             })
             const data=await response.json()
             if(!response.ok){
-                setError('Error while fetching')
+                toast.error('Error while fetching')
                 return
             }
             setUserList(prevlist=>
@@ -55,7 +51,7 @@ function ViewMember({authFetch}){
             )
         }catch(err){
             console.log(err)
-            setError('User is still active')
+            toast.error('User is still active')
         }
     }
 
@@ -102,7 +98,6 @@ function ViewMember({authFetch}){
                         ))}
                     </tbody>
                 </table>}
-                {error && <p style={{color:'red'}}>{error}</p>}
             </div>  
        </div>
     )
