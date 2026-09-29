@@ -9,6 +9,15 @@
     background-color: #f5f8f5;
 }
 
+.required {
+    color: red;
+}
+
+.form-input.input-error {
+    border: 1px solid red;
+    outline: none;
+}
+
 .page-container1{
     max-width:400px;
     max-height: auto;
