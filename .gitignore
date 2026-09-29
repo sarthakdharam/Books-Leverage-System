@@ -5,6 +5,9 @@
 **/.env
 **/.env.*
 
+# Seed files
+**/seed/
+
 # Keep example environment files
 !**/.env.example
 

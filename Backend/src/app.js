@@ -7,7 +7,6 @@ const {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs}=require('./contr
 const {createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats}=require('./controllers/librarian.controller')
 const {login}=require('./controllers/login.controller')
 const {refreshAccessToken}=require('./controllers/auth.controller')
-const {seedAdmin}=require('./seed/admin.seed')
 const {authenticate}=require('./middleware/authentication.middleware')
 const {authorize}=require('./middleware/authorize.middleware')
 const {getstats}=require('./controllers/stats.controller')
@@ -50,7 +49,7 @@ async function start(){
     try{
         await AppDataSource.initialize();
         console.log('Database connected .....')
-        await seedAdmin()
+        
         
         app.listen(3000,()=>{
             console.log('Server running on http://localhost:3000')
