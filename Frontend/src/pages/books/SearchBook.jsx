@@ -1,0 +1,58 @@
+
+
+import { useEffect, useState } from "react"
+import withAuthFetch from "../../HOC/withAuthFetch"
+
+function SearchBook({authFetch}){
+
+    const [search,setSearch]=useState([])
+    const [query,setQuery]=useState('')
+    const [error,setError]=useState('')
+
+    async function  handlesearch(searchTerm){
+        setError('')
+
+        try{
+
+            const response=await authFetch(`http://localhost:3000/api/books/search?book_name=${searchTerm}`)
+            const data=await response.json()
+
+            if(!response.ok){
+                setError('Error while fetching book for search')
+                return
+            }
+            setSearch(data)
+
+        }catch(err){
+            console.log(err)
+            setError('Something went wrong, try again')
+        }
+    }
+
+    
+    useEffect(()=>{
+        handlesearch(query)
+    },[query])
+    return(
+        <div>
+            <input className="search-input" value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search for Books"/>
+                <div className="book-grid">
+                    {search.map(book => (
+                        <div className="book-card" key={book.id}>
+                            <img
+                                src={book.book_image || 'https://via.placeholder.com/160x220?text=No+Cover'}
+                                alt={book.book_name}
+                                className="book-cover"
+                            />
+                            <h4 className="book-title">{book.book_name}</h4>
+                            <p className="book-author">{book.book_author}</p>
+                            <span className="book-category">{book.category}</span>
+                            <p className="book-id">ID: {book.id}</p>
+                        </div>
+                    ))}
+                </div>             
+                {error && <p style={{color:'red'}}>{error}</p>}
+            </div>
+    )
+}
+export default withAuthFetch(SearchBook)
