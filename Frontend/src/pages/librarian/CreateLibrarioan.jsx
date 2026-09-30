@@ -23,46 +23,70 @@ function CreateLibrarian({authFetch}){
         event.preventDefault()
 
         const newError={}
+        let errormessage=''
 
         if(form.name.trim()===''){
             newError.name=true
+            if(!errormessage){
+                errormessage='Enter FullName'
+            }
         }
 
         if(form.email.trim()===''){
             newError.email=true
+            if(!errormessage){
+                errormessage='Enter Email'
+            }
         }else{
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/
-
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/                                
 
             if (!emailPattern.test(form.email.trim())) {
                 newError.email=true
+                if(!errormessage){
+                errormessage='Enter Valid Email'
+            }
             }
         }
         
 
         if(form.phone.trim()===''){
             newError.phone=true
+            if(!errormessage){
+                errormessage='Enter Phone Number'
+            }
         }else if (form.phone.trim().length !== 10) {
             newError.phone=true
+            if(!errormessage){
+                errormessage='Phone number should be of 10 digit'
+            }
         }
         
         if(form.username.trim()===''){
             newError.username=true
+            if(!errormessage){
+                errormessage='Enter Username'
+            }
         }
         
 
         if(form.password.trim()===''){
             newError.password=true
+            if(!errormessage){
+                errormessage='Enter Password'
+            }
         }
         
 
         if(form.branch.trim()===''){
             newError.branch=true
+            if(!errormessage){
+                errormessage='Enter Branch'
+            }
         }
 
         if(Object.keys(newError).length>0){
             setError(newError)
-            toast.error('Fill all * required field')
+            toast.error(errormessage)
             return
         }
 
