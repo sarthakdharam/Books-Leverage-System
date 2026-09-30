@@ -7,39 +7,61 @@ import AdminSidebar from "../../components/Adminsidebar"
 
 function CreateBook({authFetch}){
 
-    const [book_name,setBook_name]=useState('')
-    const [book_author,setBook_author]=useState('')
-    const [total_books,setTotal_books]=useState(0)
-    const [category,setCategory]=useState('')
-    const [book_image,setBook_Image]=useState('')
+    const [form,setForm]=useState({
+        book_name:'',
+        book_author:'',
+        total_books:0,
+        category:'',
+        book_image:''
+    })
+
+    const [error,setError]=useState({})
 
 
     async function handlecreatebook(event){
         event.preventDefault()
 
-        if(book_name.trim()===''){
-            toast.error('Enter the book name')
-            return
+        const newError={}
+        let errormassage=''
+
+        if(form.book_name.trim()===''){
+            newError.book_name=true
+            if(!errormassage){
+                errormassage='Enter Book Name'
+            }
         }
 
-        if(book_author.trim()===''){
-            toast.error('Enter the book author')
-            return
+        if(form.book_author.trim()===''){
+            newError.book_author=true
+            if(!errormassage){
+                errormassage='Enter Name of Book Author'
+            }
         }
 
-
-        if(Number(total_books)<=0){
-            toast.error('Quantity of book should be atleast 1')
-            return
+        if(Number(form.total_books)<=0){
+            newError.total_books=true
+            if(!errormassage){
+                errormassage='Quantity of Book Should Be Atleast 1'
+            }
         }
 
-        if(category.trim()===''){
-            toast.error('Enter the book category')
-            return
+        if(form.category.trim()===''){
+            newError.category=true
+            if(!errormassage){
+                errormassage='Enter The Category of Book'
+            }
         }
 
-        if(book_image.trim()===''){
-            toast.error('Enter the  link for book cover')
+        if(form.book_image.trim()===''){
+            newError.book_image=true
+            if(!errormassage){
+                errormassage='Enter The Url of Book Cover Page'
+            }
+        }
+
+        if(Object.keys(newError).length>0){
+            setError(newError)
+            toast.error(errormassage)
             return
         }
 
@@ -49,7 +71,7 @@ function CreateBook({authFetch}){
             const response=await authFetch('http://localhost:3000/api/books',
                 {
                     method:'POST',
-                    body:JSON.stringify({book_name,book_author,total_books,available_books:total_books,category,book_image})
+                    body:JSON.stringify({...form,available_books:Number(form.total_books)})
                 }
             )
 
@@ -61,16 +83,25 @@ function CreateBook({authFetch}){
             }
 
             toast.success(data.message || 'Book Sucessfully created')
-            setBook_name('')
-            setBook_author('')
-            setTotal_books(0)
-            setCategory('')
-            setBook_Image('')
+            setForm({
+                book_name:'',
+                book_author:'',
+                total_books:0,
+                category:'',
+                book_image:''
+            })
             
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
         }
+    }
+
+    function handlechange(e){
+        const {name , value}=e.target
+
+        setForm(prev=>({...prev,[name]:value}))
+        setError(prev=>({...prev,[name]:false}))
     }
     return(
         <div className="dash-container">
@@ -79,16 +110,16 @@ function CreateBook({authFetch}){
                     
             <div className="page-container">
                 <form onSubmit={handlecreatebook}>
-                    <h3>BOOK NAME:</h3>
-                    <input className="form-input" value={book_name} onChange={(e)=>setBook_name(e.target.value)} placeholder="Book Name"/>
-                    <h3>BOOK AUTHOR:</h3>
-                    <input className="form-input" value={book_author} onChange={(e)=>setBook_author(e.target.value)} placeholder="Book Author"/>
-                    <h3>TOTAL BOOK:</h3>
-                    <input className="form-input" value={total_books} type="number" onChange={(e)=>setTotal_books(e.target.value)} placeholder="Total Books"/>
-                    <h3>BOOK Category:</h3>
-                    <input className="form-input" value={category} onChange={(e)=>setCategory(e.target.value)} placeholder="Book Category"/>
-                    <h3>BOOK Cover:</h3>
-                    <input className="form-input" value={book_image} onChange={(e)=>setBook_Image(e.target.value)} placeholder="Book Cover Link"/>
+                    <h3>BOOK NAME<span className="required">*</span></h3>
+                    <input className={`form-input ${error.book_name ? 'input-error' : ''}`} name="book_name" value={form.book_name} onChange={handlechange} placeholder="Book Name"/>
+                    <h3>BOOK AUTHOR<span className="required">*</span></h3>
+                    <input className={`form-input ${error.book_author ? 'input-error' : ''}`} name="book_author" value={form.book_author} onChange={handlechange} placeholder="Book Author"/>
+                    <h3>TOTAL BOOK<span className="required">*</span></h3>
+                    <input className={`form-input ${error.total_books ? 'input-error' : ''}`} name="total_books" value={form.total_books} type="number" onChange={handlechange} placeholder="Total Books"/>
+                    <h3>BOOK Category<span className="required">*</span></h3>
+                    <input className={`form-input ${error.category ? 'input-error' : ''}`} name="category" value={form.category} onChange={handlechange} placeholder="Book Category"/>
+                    <h3>BOOK Cover<span className="required">*</span></h3>
+                    <input className={`form-input ${error.book_image ? 'input-error' : ''}`} name="book_image" value={form.book_image} onChange={handlechange} placeholder="Book Cover Link"/>
                     <br/>
                     <button className="btn">Submit</button>
                 </form>
