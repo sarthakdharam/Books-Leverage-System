@@ -6,56 +6,63 @@ import AdminSidebar from "../../components/Adminsidebar"
 
 
 function CreateLibrarian({authFetch}){
+
+    const [form,setForm]=useState({
+        name:'',
+        email:'',
+        phone:'',
+        username:'',
+        password:'',
+        branch:''
+    })
     
-    const [name,setName]=useState('')
-    const [email,setEmail]=useState('')
-    const [phone,setPhone]=useState('')
-    const [username,setUsername]=useState('')
-    const [password,setPassword]=useState('')
-    const [branch,setBranch]=useState('')
+    const [error,setError]=useState({})
 
 
     async function handleCreate(event){
         event.preventDefault()
-        if(name.trim()===''){
-            toast.error('Enter name of librarian')
-            return
+
+        const newError={}
+
+        if(form.name.trim()===''){
+            newError.name=true
         }
 
-        if(email.trim()===''){
-            toast.error('Enter email of librarian')
-            return
-        }
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/
+        if(form.email.trim()===''){
+            newError.email=true
+        }else{
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/
 
-        if(!emailPattern.test(email.trim())){
-            toast.error('Enter a valid email address')
-            return
-        }
 
-        if(phone.trim()===''){
-            toast.error('Enter phone number of librarian')
-            return
-        }
-        if(phone.trim().length!==10){
-            toast.error('Phone number should be of 10 digit')
-            return
-        }
-
-        if(username.trim()===''){
-            toast.error('Enter username of librarian')
-            return
+            if (!emailPattern.test(form.email.trim())) {
+                newError.email=true
+            }
         }
         
 
-        if(password.trim()===''){
-            toast.error('Enter password for librarian')
-            return
+        if(form.phone.trim()===''){
+            newError.phone=true
+        }else if (form.phone.trim().length !== 10) {
+            newError.phone=true
+        }
+        
+        if(form.username.trim()===''){
+            newError.username=true
         }
         
 
-        if(branch.trim()===''){
-            toast.error('Enter name of branch')
+        if(form.password.trim()===''){
+            newError.password=true
+        }
+        
+
+        if(form.branch.trim()===''){
+            newError.branch=true
+        }
+
+        if(Object.keys(newError).length>0){
+            setError(newError)
+            toast.error('Fill all * required field')
             return
         }
 
@@ -65,7 +72,7 @@ function CreateLibrarian({authFetch}){
             const response=await authFetch('http://localhost:3000/api/librarian',
                 {
                     method:'POST',
-                    body:JSON.stringify({name,email,phone,username,password,branch})
+                    body:JSON.stringify(form)
                 }
             )
 
@@ -76,17 +83,27 @@ function CreateLibrarian({authFetch}){
                 return
             }
             toast.success('Librarian Successfully Created')
-            setName('')
-            setEmail('')
-            setPhone('')
-            setUsername('')
-            setPassword('')
-            setBranch('')
+            setForm({
+                name:'',
+                email:'',
+                phone:'',
+                username:'',
+                password:'',
+                branch:''
+            })
+            setError({})
 
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
         }
+    }
+
+    function handlechange(e){
+        const {name , value}=e.target
+
+        setForm(prev=>({...prev,[name]:value}))
+        setError(prev=>({...prev,[name]:false}))
     }
 
     return(
@@ -97,18 +114,18 @@ function CreateLibrarian({authFetch}){
             <div className="page-container">
                 <h3>Create Librarian</h3>   
                 <form onSubmit={handleCreate}>
-                    <h4>Librarian Name:</h4>    
-                    <input className="form-input" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Librarian Name"/>
-                    <h4>Librarian email:</h4>    
-                    <input className="form-input" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="email"/>
-                    <h4>Librarian phone No.:</h4>    
-                    <input className="form-input" value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder="Phone No."/>
-                    <h4>Librarian Username:</h4>    
-                    <input className="form-input" value={username} onChange={(e)=>setUsername(e.target.value)} placeholder="Librarian Username"/>
-                    <h4>Librarian Password:</h4>    
-                    <input className="form-input" value={password} type="password" onChange={(e)=>setPassword(e.target.value)} placeholder="Password"/>
-                    <h4>Librarian Branch:</h4>    
-                    <input className="form-input" value={branch} onChange={(e)=>setBranch(e.target.value)} placeholder="Branch"/>
+                    <h4>Librarian Name<span className="required">*</span></h4>    
+                    <input className={`form-input ${error.name ? 'input-error' : ''}`} name="name" value={form.name} onChange={handlechange} placeholder="Librarian Name"/>
+                    <h4>Librarian email<span className="required">*</span></h4>    
+                    <input className={`form-input ${error.email ? 'input-error' : ''}`} name="email" value={form.email} onChange={handlechange} placeholder="email"/>
+                    <h4>Librarian phone No.<span className="required">*</span></h4>    
+                    <input className={`form-input ${error.phone ? 'input-error' : ''}`} name="phone" value={form.phone} onChange={handlechange} placeholder="Phone No."/>
+                    <h4>Librarian Username<span className="required">*</span></h4>    
+                    <input className={`form-input ${error.username ? 'input-error' : ''}`} name="username" value={form.username} onChange={handlechange} placeholder="Librarian Username"/>
+                    <h4>Librarian Password<span className="required">*</span></h4>    
+                    <input className={`form-input ${error.password ? 'input-error' : ''}`} name="password" value={form.password} type="password" onChange={handlechange} placeholder="Password"/>
+                    <h4>Librarian Branch<span className="required">*</span></h4>    
+                    <input className={`form-input ${error.branch ? 'input-error' : ''}`} name="branch" value={form.branch} onChange={handlechange} placeholder="Branch"/>
                     
                     <br/>
                     <button className="btn">Submit</button>
