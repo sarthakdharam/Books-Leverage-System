@@ -143,4 +143,27 @@ const deleteuser=async (req,res)=>{
         res.status(500).json({ message: 'Error Deleting User', error: err.message })
     }
 }
-module.exports={createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser}
+
+const searchUsers = async (req, res) => {
+    try {
+        const { name } = req.query  
+
+        const query = userRepository.createQueryBuilder('user')
+            .andWhere('user.is_active = :is_active', { is_active: true })
+
+        if (name) {
+            query.andWhere(
+                '(CAST(user.id AS TEXT) ILIKE :term OR user.name ILIKE :term OR user.username ILIKE :term OR user.email ILIKE :term)',
+                { term: `%${name}%` }
+            )
+        }
+
+        const users = await query.orderBy('user.name', 'ASC').getMany()
+        res.status(200).json(users)
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Error Searching Users', error: err.message })
+    }
+}
+module.exports={createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers}
