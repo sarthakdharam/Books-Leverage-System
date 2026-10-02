@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import CreateMember from "./CreateMember"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header"
 import LibrarianSidebar from "../../components/Librariansidebar"
 
 function ViewMember({authFetch}){
     const [userList,setUserList]=useState([])
-   
+    const [showCreateUser, setShowCreateUser] = useState(false);
     const [loading,setLoading]=useState(false)
-    
    
     
     async function handleviewuser(){
@@ -55,16 +55,46 @@ function ViewMember({authFetch}){
         }
     }
 
+    async function handlesearch(value){
+        try{
+            if(value.trim()===''){
+                handleviewuser()
+                return
+            }
+
+            const response=await authFetch(`http://localhost:3000/api/users/search?name=${value}`)
+            const data=await response.json()
+
+            if(!response.ok){
+                toast.error(data.message || 'something failed')
+                return
+            }
+
+            setUserList(data)
+
+        }catch(err){
+            console.log(err)
+            toast.error('Something went wrong plese try again')}
+    }
+
     useEffect(() => {
         handleviewuser()
-    }, [])
+    },[])
 
     
 
     return(
         <div className="dash-container">
             <LibrarianSidebar/>
-             <Header/>                      
+            <Header 
+                showBranding={false}
+                title="Members"
+                icon="👥"
+                showSearch={true}
+                searchPlaceholder="Search Member"
+                onSearch={handlesearch}
+                onCreate={() => setShowCreateUser(true)}
+            />                      
                     
             <div className="table-container">
                 {loading && <p>Loading...</p>}
@@ -99,6 +129,8 @@ function ViewMember({authFetch}){
                     </tbody>
                 </table>}
             </div>  
+
+            {showCreateUser && (<CreateMember authFetch={authFetch}  onClose={()=> setShowCreateUser(false)} onCreated={handleviewuser}/>)}
        </div>
     )
 }

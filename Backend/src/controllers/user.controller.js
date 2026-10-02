@@ -153,7 +153,7 @@ const searchUsers = async (req, res) => {
 
         if (name) {
             query.andWhere(
-                '(CAST(user.id AS TEXT) ILIKE :term OR user.name ILIKE :term OR user.username ILIKE :term OR user.email ILIKE :term)',
+                '(user.name ILIKE :term OR user.username ILIKE :term OR user.email ILIKE :term OR CAST(user.phone AS TEXT) ILIKE :term)',
                 { term: `%${name}%` }
             )
         }

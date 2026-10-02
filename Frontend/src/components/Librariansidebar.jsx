@@ -19,12 +19,8 @@ function LibrarianSidebar() {
           🏠 Dashboard
         </NavLink>
 
-        <NavLink to="/user/create">
-          👥 Create Member
-        </NavLink>
-
         <NavLink to="/user/view">
-          👥 View Members
+          👥 Members
         </NavLink>
 
         <NavLink to="/book/borrow">
