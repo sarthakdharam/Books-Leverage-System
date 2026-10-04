@@ -150,4 +150,28 @@ const getBorrowLogs = async (req, res) => {
     }
 }
 
-module.exports = {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs}
+const searchBorrow = async (req, res) => {
+    try {
+        const { name } = req.query  
+
+        const query = BorrowRepository.createQueryBuilder('borrow')
+                                    .leftJoinAndSelect('borrow.book', 'book')
+                                    .leftJoinAndSelect('borrow.user', 'user')
+
+        if (name) {
+            query.andWhere(
+                '(book.book_name ILIKE :term OR user.name ILIKE :term OR borrow.status ILIKE :term OR CAST(borrow.borrow_date AS TEXT) ILIKE :term)',
+                { term: `%${name}%` }
+            )
+        }
+
+        const borrows = await query.orderBy('borrow.borrow_date', 'DESC').getMany()
+        res.status(200).json(borrows)
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Error Searching Borrow data', error: err.message })
+    }
+}
+
+module.exports = {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs,searchBorrow}

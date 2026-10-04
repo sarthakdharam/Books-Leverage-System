@@ -3,7 +3,7 @@ const {AppDataSource}=require('./config/database')
 const express=require('express')
 const {createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers}=require('./controllers/user.controller')
 const {createBook,searchBooks,updatebook,deleteBook,getAllBooks}=require('./controllers/book.controller')
-const {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs}=require('./controllers/borrow.controller')
+const {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs,searchBorrow}=require('./controllers/borrow.controller')
 const {createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats}=require('./controllers/librarian.controller')
 const {login}=require('./controllers/login.controller')
 const {refreshAccessToken}=require('./controllers/auth.controller')
@@ -45,6 +45,7 @@ app.patch('/api/users/:id/deactivate', authenticate, authorize(['librarian']), d
 app.get('/api/admin/stats',authenticate,authorize(['admin']),getstats)
 app.get('/api/librarian/stats', authenticate, authorize(['librarian']), getLibrarianStats)
 app.get('/api/users/search',authenticate,authorize(['librarian']),searchUsers)
+app.get('/api/borrow/search',authenticate,authorize(['librarian']),searchBorrow)
 
 async function start(){
     try{
