@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import CreateBook from "./CreateBook"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 
 function ViewBook({authFetch}){
     const [booklist,setBookList]=useState([])
+    const [showCreateBook, setShowCreateBook] = useState(false)
     const navigate=useNavigate()
    
    
@@ -49,6 +51,25 @@ function ViewBook({authFetch}){
         }
     } 
 
+    async function  handlesearch(searchTerm){
+
+        try{
+
+            const response=await authFetch(`http://localhost:3000/api/books/search?book_name=${searchTerm}`)
+            const data=await response.json()
+
+            if(!response.ok){
+                toast.error('Error while fetching book for search')
+                return
+            }
+            setBookList(data)
+
+        }catch(err){
+            console.log(err)
+            toast.error('Something went wrong, try again')
+        }
+    }
+
     useEffect(() => {
         handleviewbook()
         
@@ -61,7 +82,15 @@ function ViewBook({authFetch}){
     return(
         <div className="dash-container">
             <AdminSidebar/>
-            <Header/>                      
+            <Header 
+                showBranding={false}
+                title="BOOKS"
+                icon="📚"
+                showSearch={true}
+                searchPlaceholder="Search Books"
+                onSearch={handlesearch}
+                onCreate={() => setShowCreateBook(true)}
+            />                      
                     
             <div className="table-container">
                 <table>
@@ -109,6 +138,7 @@ function ViewBook({authFetch}){
                     </tbody>
                 </table>
             </div>  
+            {showCreateBook && (<CreateBook authFetch={authFetch} onClose={()=>setShowCreateBook(false)} onCreated={handleviewbook}/>)}
        </div>
     )
 }

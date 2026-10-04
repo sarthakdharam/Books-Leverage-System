@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { toast } from "react-toastify"
 import withAuthFetch from "../../HOC/withAuthFetch"
-import Header from "../../components/Header"
-import AdminSidebar from "../../components/Adminsidebar"
 
 
-function CreateBook({authFetch}){
+function CreateBook({authFetch,onClose,onCreated}){
 
     const [form,setForm]=useState({
         book_name:'',
@@ -22,46 +20,29 @@ function CreateBook({authFetch}){
         event.preventDefault()
 
         const newError={}
-        let errormassage=''
 
         if(form.book_name.trim()===''){
-            newError.book_name=true
-            if(!errormassage){
-                errormassage='Enter Book Name'
-            }
+            newError.book_name='Enter Book Name'
         }
 
         if(form.book_author.trim()===''){
-            newError.book_author=true
-            if(!errormassage){
-                errormassage='Enter Name of Book Author'
-            }
+            newError.book_author='Enter Book Author'
         }
 
         if(Number(form.total_books)<=0){
-            newError.total_books=true
-            if(!errormassage){
-                errormassage='Quantity of Book Should Be Atleast 1'
-            }
+            newError.total_books="Quantity of Book Should Be Atleast 1"
         }
 
         if(form.category.trim()===''){
-            newError.category=true
-            if(!errormassage){
-                errormassage='Enter The Category of Book'
-            }
+            newError.category="Enter Book Category"
         }
 
         if(form.book_image.trim()===''){
-            newError.book_image=true
-            if(!errormassage){
-                errormassage='Enter The Url of Book Cover Page'
-            }
+            newError.book_image="Enter Book Cover Page Url"
         }
 
         if(Object.keys(newError).length>0){
             setError(newError)
-            toast.error(errormassage)
             return
         }
 
@@ -90,6 +71,10 @@ function CreateBook({authFetch}){
                 category:'',
                 book_image:''
             })
+
+            setError({})
+            onCreated()
+            onClose()
             
         }catch(err){
             console.log(err)
@@ -101,26 +86,32 @@ function CreateBook({authFetch}){
         const {name , value}=e.target
 
         setForm(prev=>({...prev,[name]:value}))
-        setError(prev=>({...prev,[name]:false}))
+        setError(prev=>({...prev,[name]:''}))
     }
     return(
-        <div className="dash-container">
-            <AdminSidebar/>
-            <Header/>                      
+        <div className="modal-overlay" onClick={onClose}>                
                     
-            <div className="page-container">
+            <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
+                <div className="form-header"><h3>Create Book</h3> 
+                <button type="button" className="close-btn" onClick={onClose}>×</button>
+            </div>
+
                 <form onSubmit={handlecreatebook}>
                     <h3>BOOK NAME<span className="required">*</span></h3>
                     <input className={`form-input ${error.book_name ? 'input-error' : ''}`} name="book_name" value={form.book_name} onChange={handlechange} placeholder="Book Name"/>
+                    {error.book_name && (<p className="field-error">{error.book_name}</p>)}
                     <h3>BOOK AUTHOR<span className="required">*</span></h3>
                     <input className={`form-input ${error.book_author ? 'input-error' : ''}`} name="book_author" value={form.book_author} onChange={handlechange} placeholder="Book Author"/>
+                    {error.book_author && (<p className="field-error">{error.book_author}</p>)}
                     <h3>TOTAL BOOK<span className="required">*</span></h3>
                     <input className={`form-input ${error.total_books ? 'input-error' : ''}`} name="total_books" value={form.total_books} type="number" onChange={handlechange} placeholder="Total Books"/>
+                    {error.total_books && (<p className="field-error">{error.total_books}</p>)}
                     <h3>BOOK Category<span className="required">*</span></h3>
                     <input className={`form-input ${error.category ? 'input-error' : ''}`} name="category" value={form.category} onChange={handlechange} placeholder="Book Category"/>
+                    {error.category && (<p className="field-error">{error.category}</p>)}
                     <h3>BOOK Cover<span className="required">*</span></h3>
                     <input className={`form-input ${error.book_image ? 'input-error' : ''}`} name="book_image" value={form.book_image} onChange={handlechange} placeholder="Book Cover Link"/>
-                    <br/>
+                    {error.book_image && (<p className="field-error">{error.book_image}</p>)}
                     <button className="btn">Submit</button>
                 </form>
             </div>

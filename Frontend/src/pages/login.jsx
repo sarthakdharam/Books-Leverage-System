@@ -46,7 +46,7 @@ function Login(){
 
 
     return(
-        <div>
+        <div className="login-page">
             <img src={logo} alt='Libaray logo' className="login-logo"/>
             <div className="page-container">
                 <h1 className="normal-text">Login Page</h1>

@@ -7,8 +7,9 @@ body {
     padding: 0;
 }
 .page-container{
-    max-width:400px;
+    max-width:500px;
     max-height: auto;
+    min-width: 400px;
     padding: 20px;
     border: 1px solid #be9a17;
     border-radius: 30px;
@@ -262,6 +263,14 @@ tr:hover {
     display: block;
     height: 150px;
     margin: 0 auto 10px auto;
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .dash-container, .sidebar, .page-container div {

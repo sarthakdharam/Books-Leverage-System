@@ -19,12 +19,8 @@ function AdminSidebar() {
           🏠 Dashboard
         </NavLink>
 
-        <NavLink to="/books/create">
-          📚 Create Book
-        </NavLink>
-
         <NavLink to="/books/view">
-          📚 View Books
+          📚 Books
         </NavLink>
 
         <NavLink to="/librarian/create">
