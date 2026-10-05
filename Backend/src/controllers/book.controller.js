@@ -139,4 +139,24 @@ const deleteBook = async (req, res) => {
     }
 } 
 
-module.exports = { createBook, searchBooks ,updatebook,deleteBook,getAllBooks}
+const activateBook = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const book = await BookRepository.findOneBy({ id })
+        if (!book) {
+            return res.status(404).json({ message: 'Book Not Found' })
+        }
+
+        book.is_active = true
+        await BookRepository.save(book)
+
+        res.status(200).json({ message: 'Book activated successfully' })
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Error Deleting Book', error: err.message })
+    }
+} 
+
+module.exports = { createBook, searchBooks ,updatebook,deleteBook,getAllBooks,activateBook}

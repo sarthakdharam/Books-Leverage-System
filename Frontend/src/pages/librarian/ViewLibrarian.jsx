@@ -4,10 +4,13 @@ import { toast } from "react-toastify"
 import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 import CreateLibrarian from "./CreateLibrarian"
+import ConfirmActivatelibrarian from "./ConfirmActivateLibrarian"
 
 function ViewLibrarian({authFetch}){
     const [librarianList,setLibrarianList]=useState([])
     const [showCreateLibrarian,setShowCreateLibrarian]=useState()
+    const [showActivateConfirm, setShowActivateConfirm] = useState(false)
+    const [selectedLibrarianId, setSelectedLibrarianId] = useState(null)
    
     
     async function handleviewlibrarian(){
@@ -43,6 +46,25 @@ function ViewLibrarian({authFetch}){
         }
     }
 
+    async function activate(id){
+        try{
+            const response=await authFetch(`http://localhost:3000/api/librarian/${id}/activate`,{
+                method:'PATCH'
+            })
+            const data=await response.json()
+            if(!response.ok){
+                toast.error('Error while fetching')
+                return
+            }
+            setLibrarianList(prevlist=>
+                prevlist.map(b=>b.id===Number(id)? {...b, is_active:true}:b)
+            )
+        }catch(err){
+            console.log(err)
+            toast.error('Librarain is still deactivate')
+        }
+    }
+
     async function handlesearch(value){
         try{
 
@@ -64,6 +86,11 @@ function ViewLibrarian({authFetch}){
     useEffect(() => {
         handleviewlibrarian()
     }, [])
+
+    function handleActivateClick(id) {
+        setSelectedLibrarianId(id)
+        setShowActivateConfirm(true)
+    }
 
     return(
         <div className="dash-container">
@@ -103,8 +130,8 @@ function ViewLibrarian({authFetch}){
                                 <td>{librarian.branch}</td>
                                 <td>{librarian.is_active ? 'Active' : 'Inactive'}</td>
                                 <td>
-                                    <button className="btn" disabled={!librarian.is_active} onClick={() => deactivate(librarian.id)}>
-                                        {librarian.is_active ? 'Deactivate' : 'Deactivated'}
+                                    <button className="btn" onClick={() => librarian.is_active ? deactivate(librarian.id):handleActivateClick(librarian.id)}>
+                                        {librarian.is_active ? 'Deactivate' : 'Activate'}
                                     </button>
                                 </td>
                             </tr>
@@ -113,6 +140,9 @@ function ViewLibrarian({authFetch}){
                 </table>
             </div> 
             {showCreateLibrarian && (<CreateLibrarian authFetch={authFetch} onClose={()=>setShowCreateLibrarian(false)} onCreated={handleviewlibrarian}/>)} 
+            {showActivateConfirm && (<ConfirmActivatelibrarian onConfirm={async () => {await activate(selectedLibrarianId)
+                        setShowActivateConfirm(false)}} onClose={() => setShowActivateConfirm(false)}/>
+            )}
        </div>
     )
 }

@@ -147,6 +147,27 @@ const deletelabrarian=async (req,res)=>{
     }
 }
 
+const activatelabrarian=async (req,res)=>{
+    try{
+        const {id}=req.params
+
+        const librarian=await librarianRepository.findOneBy({id})
+
+        if(!librarian){
+            return res.status(404).json({message:'Librarian Not Found'})
+        }
+
+        librarian.is_active=true
+        await librarianRepository.save(librarian)
+
+        res.status(200).json({message:'librarian activated successfully'})
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ message: 'Error Deleting Librarian', error: err.message })
+    }
+}
+
 
 const getLibrarianStats = async (req, res) => {
     try {
@@ -201,4 +222,4 @@ const searchLibrarian = async (req, res) => {
     }
 }
 
-module.exports={createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats,searchLibrarian}
+module.exports={createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,activatelabrarian,deletelabrarian,getLibrarianStats,searchLibrarian}

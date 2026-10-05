@@ -144,6 +144,27 @@ const deleteuser=async (req,res)=>{
     }
 }
 
+const activateuser=async (req,res)=>{
+    try{
+        const {id}=req.params
+
+        const user=await userRepository.findOneBy({id})
+
+        if(!user){
+            return res.status(404).json({message:'User Not Found'})
+        }
+
+        user.is_active=true
+        await userRepository.save(user)
+
+        res.status(200).json({message:'User activated successfully'})
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ message: 'Error Deleting User', error: err.message })
+    }
+}
+
 const searchUsers = async (req, res) => {
     try {
         const { name } = req.query  
@@ -166,4 +187,4 @@ const searchUsers = async (req, res) => {
         res.status(500).json({ message: 'Error Searching Users', error: err.message })
     }
 }
-module.exports={createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers}
+module.exports={createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers,activateuser}

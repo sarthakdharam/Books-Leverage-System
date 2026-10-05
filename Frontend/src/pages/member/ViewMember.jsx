@@ -4,11 +4,15 @@ import CreateMember from "./CreateMember"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header"
 import LibrarianSidebar from "../../components/Librariansidebar"
+import ConfirmActivatemember from "./ConfirmActivatemember"
 
 function ViewMember({authFetch}){
     const [userList,setUserList]=useState([])
     const [showCreateUser, setShowCreateUser] = useState(false);
     const [loading,setLoading]=useState(false)
+    const [showActivateConfirm, setShowActivateConfirm] = useState(false)
+    const [selectedUserId, setSelectedUserId] = useState(null)
+
    
     
     async function handleviewuser(){
@@ -55,6 +59,25 @@ function ViewMember({authFetch}){
         }
     }
 
+    async function activate(id){
+        try{
+            const response=await authFetch(`http://localhost:3000/api/users/${id}/deactivate`,{
+                method:'PATCH'
+            })
+            const data=await response.json()
+            if(!response.ok){
+                toast.error('Error while fetching')
+                return
+            }
+            setUserList(prevlist=>
+                prevlist.map(b=>b.id===Number(id)? {...b, is_active:true}:b)
+            )
+        }catch(err){
+            console.log(err)
+            toast.error('User is still deactivate')
+        }
+    }
+
     async function handlesearch(value){
         try{
             if(value.trim()===''){
@@ -81,7 +104,10 @@ function ViewMember({authFetch}){
         handleviewuser()
     },[])
 
-    
+    function handleActivateClick(id) {
+        setSelectedUserId(id)
+        setShowActivateConfirm(true)
+    }
 
     return(
         <div className="dash-container">
@@ -120,8 +146,8 @@ function ViewMember({authFetch}){
                                 <td>{user.phone}</td>
                                 <td>{user.is_active ? 'Active' : 'Inactive'}</td>
                                 <td>
-                                    <button className="btn" disabled={!user.is_active} onClick={() => deactivate(user.id)}>
-                                        {user.is_active ? 'Deactivate' : 'Deactivated'}
+                                    <button className="btn"  onClick={() => {user.is_active ? deactivate(user.id):handleActivateClick(user.id)}}>
+                                        {user.is_active ? 'Deactivate' : 'Activate'}
                                     </button>
                                 </td>
                             </tr>
@@ -131,6 +157,9 @@ function ViewMember({authFetch}){
             </div>  
 
             {showCreateUser && (<CreateMember authFetch={authFetch}  onClose={()=> setShowCreateUser(false)} onCreated={handleviewuser}/>)}
+            {showActivateConfirm && (<ConfirmActivatemember onConfirm={async () => {await activate(selectedUserId)
+                        setShowActivateConfirm(false)}} onClose={() => setShowActivateConfirm(false)}/>
+            )}
        </div>
     )
 }
