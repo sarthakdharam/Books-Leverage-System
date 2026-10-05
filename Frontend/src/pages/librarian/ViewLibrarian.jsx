@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import { toast } from "react-toastify"
-import { useNavigate} from "react-router-dom"
 import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
+import CreateLibrarian from "./CreateLibrarian"
 
 function ViewLibrarian({authFetch}){
     const [librarianList,setLibrarianList]=useState([])
-
+    const [showCreateLibrarian,setShowCreateLibrarian]=useState()
    
     
     async function handleviewlibrarian(){
@@ -43,6 +43,24 @@ function ViewLibrarian({authFetch}){
         }
     }
 
+    async function handlesearch(value){
+        try{
+
+            const response=await authFetch(`http://localhost:3000/api/librarian/search?name=${value}`)
+
+            const data=await response.json()
+
+            if(!response.ok){
+                toast.error(data.message || 'something failed')
+                return
+            }
+            setLibrarianList(data)
+        }catch(err){
+            console.log(err)
+            toast.error('Something went wrong plese try again')
+        }
+    }
+
     useEffect(() => {
         handleviewlibrarian()
     }, [])
@@ -50,7 +68,15 @@ function ViewLibrarian({authFetch}){
     return(
         <div className="dash-container">
             <AdminSidebar/>
-            <Header/>                      
+            <Header 
+                showBranding={false}
+                title="LIBRARIAN"
+                icon="👨🏽‍💼"
+                showSearch={true}
+                searchPlaceholder="Search Librarian"
+                onSearch={handlesearch}
+                onCreate={() => setShowCreateLibrarian(true)}
+                />                      
                     
             <div className="table-container">
                 <table>
@@ -85,7 +111,8 @@ function ViewLibrarian({authFetch}){
                         ))}
                     </tbody>
                 </table>
-            </div>  
+            </div> 
+            {showCreateLibrarian && (<CreateLibrarian authFetch={authFetch} onClose={()=>setShowCreateLibrarian(false)} onCreated={handleviewlibrarian}/>)} 
        </div>
     )
 }

@@ -4,7 +4,7 @@ const express=require('express')
 const {createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers}=require('./controllers/user.controller')
 const {createBook,searchBooks,updatebook,deleteBook,getAllBooks}=require('./controllers/book.controller')
 const {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs,searchBorrow}=require('./controllers/borrow.controller')
-const {createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats}=require('./controllers/librarian.controller')
+const {createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats,searchLibrarian}=require('./controllers/librarian.controller')
 const {login}=require('./controllers/login.controller')
 const {refreshAccessToken}=require('./controllers/auth.controller')
 const {authenticate}=require('./middleware/authentication.middleware')
@@ -46,6 +46,7 @@ app.get('/api/admin/stats',authenticate,authorize(['admin']),getstats)
 app.get('/api/librarian/stats', authenticate, authorize(['librarian']), getLibrarianStats)
 app.get('/api/users/search',authenticate,authorize(['librarian']),searchUsers)
 app.get('/api/borrow/search',authenticate,authorize(['librarian']),searchBorrow)
+app.get('/api/librarian/search',authenticate,authorize(['admin']),searchLibrarian)
 
 async function start(){
     try{

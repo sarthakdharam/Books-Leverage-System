@@ -23,15 +23,10 @@ function AdminSidebar() {
           📚 Books
         </NavLink>
 
-        <NavLink to="/librarian/create">
-          👨🏽‍💼 Create Librarian
-        </NavLink>
-
         <NavLink to="/librarian/view">
-          👨🏽‍💼 View Librarians
+          👨🏽‍💼 Librarians
         </NavLink>
-
-
+        
       </nav>
 
       <div className="sidebar-bottom">

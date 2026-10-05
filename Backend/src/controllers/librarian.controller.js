@@ -177,4 +177,28 @@ const getLibrarianStats = async (req, res) => {
         res.status(500).json({ message: 'Error fetching stats', error: err.message })
     }
 }
-module.exports={createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats}
+
+const searchLibrarian = async (req, res) => {
+    try {
+        const { name } = req.query  
+
+        const query = librarianRepository.createQueryBuilder('librarian')
+            .andWhere('librarian.is_active = :is_active', { is_active: true })
+
+        if (name) {
+            query.andWhere(
+                '(librarian.name ILIKE :term OR librarian.username ILIKE :term OR librarian.email ILIKE :term OR CAST(librarian.phone AS TEXT) ILIKE :term)',
+                { term: `%${name}%` }
+            )
+        }
+
+        const librarians = await query.orderBy('librarian.name', 'ASC').getMany()
+        res.status(200).json(librarians)
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Error Searching Users', error: err.message })
+    }
+}
+
+module.exports={createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,deletelabrarian,getLibrarianStats,searchLibrarian}
