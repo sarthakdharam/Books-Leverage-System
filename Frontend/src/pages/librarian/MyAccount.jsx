@@ -37,7 +37,7 @@ function MyAccount({authFetch,onClose}){
             <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
             <div className="form-header"><h3>My Account</h3> 
             <button type="button" className="update-btn" onClick={()=>setShowUpdate(true)}><FaEdit/></button>
-            <button type="button" className="close-btn" onClick={onClose}>×</button>
+            <button type="button" className="close-btn" onClick={onClose} title="close">×</button>
             </div>
                     <div className="page-container1">
                         <div key={account.id}>

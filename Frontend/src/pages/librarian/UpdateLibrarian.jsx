@@ -60,7 +60,7 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
                       
             <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
                 <div className="form-header"><h3>Update Info</h3> 
-                <button type="button" className="close-btn1" onClick={onClose}>×</button>
+                <button type="button" className="close-btn1" onClick={onClose} title="close">×</button>
             </div>
                 <form onSubmit={handleupdate}>
                     <h3>Name</h3>

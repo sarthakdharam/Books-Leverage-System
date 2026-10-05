@@ -88,7 +88,7 @@ function ViewMember({authFetch}){
             <LibrarianSidebar/>
             <Header 
                 showBranding={false}
-                title="Members"
+                title="MEMBERS"
                 icon="👥"
                 showSearch={true}
                 searchPlaceholder="Search Member"

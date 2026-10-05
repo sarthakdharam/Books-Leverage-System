@@ -89,6 +89,7 @@ function ViewBook({authFetch}){
                 title="BOOKS"
                 icon="📚"
                 showSearch={true}
+                createtitle="Create Book"
                 searchPlaceholder="Search Books"
                 onSearch={handlesearch}
                 onCreate={() => setShowCreateBook(true)}

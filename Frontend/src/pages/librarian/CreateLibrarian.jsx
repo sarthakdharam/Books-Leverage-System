@@ -109,7 +109,7 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
                     
             <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
                 <div className="form-header"><h3>Create Librarian</h3> 
-                <button type="button" className="close-btn" onClick={onClose}>×</button>
+                <button type="button" className="close-btn" onClick={onClose} title="close">×</button>
             </div>  
                 <form onSubmit={handleCreate}>
                     <h4>Librarian Name<span className="required">*</span></h4>    

@@ -69,6 +69,7 @@ function ViewBorrow({authFetch , }){
                 showSearch={true}
                 searchPlaceholder = "Search Borrow" 
                 onSearch={handlesearch}
+                createtitle="Borrow"
                 onCreate={()=>setShowBorrowBook(true)}
                 onReduce={()=>setShowReturnBook(true)}
 

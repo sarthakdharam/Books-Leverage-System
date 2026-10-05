@@ -78,7 +78,7 @@ function UpdateBook({authFetch,bookId,onClose,onCreated}){
                    
             <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
                 <div className="form-header"><h3>Update Book</h3> 
-                <button type="button" className="close-btn" onClick={onClose}>×</button>
+                <button type="button" className="close-btn" onClick={onClose} title="close">×</button>
             </div>
                 <form onSubmit={handleupdatebook}>
                     <h3>BOOK NAME:</h3>

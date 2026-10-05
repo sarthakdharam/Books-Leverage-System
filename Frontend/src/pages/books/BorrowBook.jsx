@@ -72,7 +72,7 @@ function BorrowBook({authFetch,onClose,onCreated}){
                                 
             <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
                 <div className="form-header"><h3>Borrow Book</h3> 
-                <button type="button" className="close-btn1" onClick={onClose}>×</button>
+                <button type="button" className="close-btn1" onClick={onClose} title="close">×</button>
             </div>
                 <form onSubmit={handleborrow}>
                     <input className={`form-input ${error.user_id ? 'input-error' : ''}`} name="user_id" value={form.user_id} onChange={handlechange} placeholder="User Id"/>
