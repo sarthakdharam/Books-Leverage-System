@@ -8,10 +8,13 @@ function Login(){
     const [username,setUsername]=useState("")
     const [password,setPassword]=useState("")
     const navigate=useNavigate()
+    const [isSubmitting,setIsSubmitting]=useState(false)
 
     async function handleSubmit(event){
         event.preventDefault() 
 
+        if(isSubmitting)return
+        setIsSubmitting(true)
         try{
             const response=await fetch('http://localhost:3000/api/login',{
                 method:"POST",
@@ -39,6 +42,8 @@ function Login(){
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
+        }finally{
+            setIsSubmitting(false)
         }
 
         
@@ -55,7 +60,7 @@ function Login(){
                     <br></br>
                     <input className="form-input" value={password} onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="password"/><br></br>
                     <br></br>
-                    <button className="btn" type="submit">Login</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting?(<span className="loader"></span>):('Login')}</button>
                 </form>
             </div>
         </div>

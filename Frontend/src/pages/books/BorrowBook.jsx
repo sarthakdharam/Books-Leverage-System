@@ -1,8 +1,6 @@
 import { useState } from "react"
 import { toast } from "react-toastify"
 import withAuthFetch from "../../HOC/withAuthFetch"
-import Header from "../../components/Header"
-import LibrarianSidebar from "../../components/Librariansidebar"
 
 
 function BorrowBook({authFetch,onClose,onCreated}){
@@ -12,11 +10,14 @@ function BorrowBook({authFetch,onClose,onCreated}){
         book_id:''
     })
 
+    const [isSubmitting,setIsSubmitting]=useState(false)
     const [error,setError]=useState({})
 
 
     async function handleborrow(event){
         event.preventDefault()
+        
+        if(isSubmitting)return
 
         const newError={}
 
@@ -31,6 +32,8 @@ function BorrowBook({authFetch,onClose,onCreated}){
             setError(newError)
             return
         }
+
+        setIsSubmitting(true)
         
         try{
             const response=await authFetch(`http://localhost:3000/api/borrow`,{
@@ -57,6 +60,8 @@ function BorrowBook({authFetch,onClose,onCreated}){
         }catch(err){
             console.log(err)
             toast.error('Something went wrong ,try again')
+        }finally{
+            setIsSubmitting(false)
         }
     }
 
@@ -79,7 +84,7 @@ function BorrowBook({authFetch,onClose,onCreated}){
                     {error.user_id && (<p className="field-error">{error.user_id}</p>)}
                     <input className={`form-input ${error.book_id ? 'input-error' : ''}`} name="book_id" value={form.book_id} onChange={handlechange} placeholder="Book Id"/>
                     {error.book_id && (<p className="field-error">{error.book_id}</p>)}
-                    <button className="btn">Submit</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>
             </div>
         </div>

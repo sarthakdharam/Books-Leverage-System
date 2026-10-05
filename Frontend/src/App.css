@@ -499,3 +499,24 @@ tr:hover {
     overflow: visible;
 }
 
+.loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.loader::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

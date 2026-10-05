@@ -9,13 +9,15 @@ function UpdateMember({authFetch,onClose,onCreated}){
     const [email,setEmail]=useState('')
     const [phone,setPhone]=useState('')
     const [password,setPassword]=useState('')
-    
+    const [isSubmitting,setIsSubmitting]=useState(false)    
 
 
 
     async function handleupdate(event){
         event.preventDefault()
         
+        if(isSubmitting)return
+
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$/
 
         if(email.trim() !== '' && !emailPattern.test(email.trim())){
@@ -27,6 +29,8 @@ function UpdateMember({authFetch,onClose,onCreated}){
             toast.error('Phone number should be 10 digits')
             return
         }
+
+        setIsSubmitting(true)
 
         try{
 
@@ -54,6 +58,8 @@ function UpdateMember({authFetch,onClose,onCreated}){
         }catch(err){
             console.log(err)
             toast.error('Something went wrong, try agian')
+        }finally{
+            setIsSubmitting(false)
         }
 
     }
@@ -76,9 +82,7 @@ function UpdateMember({authFetch,onClose,onCreated}){
                     <input className="form-input" value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder="Enter Updating phone"/>
                     <h3>Password</h3>
                     <input className="form-input" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter Update password"/>
-                    <br/>
-                    <button className="btn">Submit</button>
-                    <br/>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting?(<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>
             </div>
         </div>

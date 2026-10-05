@@ -13,12 +13,14 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
         password:'',
         branch:''
     })
-    
+    const [isSubmitting,setIsSubmitting]=useState(false)    
     const [error,setError]=useState({})
 
 
     async function handleCreate(event){
         event.preventDefault()
+
+        if(isSubmitting)return
 
         const newError={}
 
@@ -61,6 +63,7 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
             setError(newError)
             return
         }
+        setIsSubmitting(true)
 
         try{
 
@@ -94,6 +97,8 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
+        }finally{
+            setIsSubmitting(false)
         }
     }
 
@@ -130,7 +135,7 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
                     <h4>Librarian Branch<span className="required">*</span></h4>    
                     <input className={`form-input ${error.branch ? 'input-error' : ''}`} name="branch" value={form.branch} onChange={handlechange} placeholder="Branch"/>
                     {error.branch && (<p className="field-error">{error.branch}</p>)}
-                    <button className="btn">Submit</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting?(<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>  
             </div>
         </div>

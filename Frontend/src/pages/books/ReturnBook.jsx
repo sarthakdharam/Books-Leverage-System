@@ -11,10 +11,13 @@ function ReturnBook({authFetch,onClose,onCreated}){
         book_id:''
     })
     const[error,setError]=useState({})
+    const [isSubmitting,setIsSubmitting]=useState(false)
 
     async function handlereturn(event){
         event.preventDefault()
 
+        if(isSubmitting) return
+          
         const newError={}
 
          if(Number(form.user_id)<=0){
@@ -28,6 +31,8 @@ function ReturnBook({authFetch,onClose,onCreated}){
             setError(newError)
             return
         }
+
+        setIsSubmitting(true)
 
         try{
             const response=await authFetch(`http://localhost:3000/api/borrow/return`,{
@@ -55,6 +60,8 @@ function ReturnBook({authFetch,onClose,onCreated}){
         }catch(err){
             console.log(err)
             toast.error('Something went wrong ,try again')
+        }finally{
+            setIsSubmitting(false)
         }
     }
 
@@ -78,7 +85,7 @@ function ReturnBook({authFetch,onClose,onCreated}){
                     {error.user_id && (<p className="field-error">{error.user_id}</p>)}
                     <input className={`form-input ${error.book_id ? 'input-error' : ''}`} name="book_id" value={form.book_id} onChange={handlechange} placeholder="Book Id"/>
                     {error.book_id && (<p className="field-error">{error.book_id}</p>)}
-                    <button className="btn">Submit</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting</span>):('Submit')}</button>
                 </form>
             </div>
         </div>

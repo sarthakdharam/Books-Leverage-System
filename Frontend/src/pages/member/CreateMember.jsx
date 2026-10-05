@@ -11,13 +11,14 @@ function Createuser({authFetch,onClose,onCreated}){
         username:'',
         password:''
     })
-    
-
+    const [isSubmitting,setIsSubmitting]=useState(false)
     const [error,setError]=useState({})
 
 
     async function handleCreate(event){
         event.preventDefault()
+
+        if(isSubmitting)return 
 
         const newError={}
 
@@ -58,6 +59,7 @@ function Createuser({authFetch,onClose,onCreated}){
             return
         }
         
+        setIsSubmitting(true)
 
         try{
 
@@ -91,6 +93,8 @@ function Createuser({authFetch,onClose,onCreated}){
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
+        }finally{
+            setIsSubmitting(false)
         }
     }
 
@@ -127,7 +131,7 @@ function Createuser({authFetch,onClose,onCreated}){
                     <h4>User Password<span className="required">*</span></h4>    
                     <input className={`form-input ${error.password ? 'input-error' : ''}`} name="password" value={form.password} type="password" onChange={handlechange} placeholder="Password"/>
                     {error.password && (<p className="field-error">{error.password}</p>)}
-                    <button className="btn">Submit</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting?(<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>  
                 <br/>
             

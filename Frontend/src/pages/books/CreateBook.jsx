@@ -14,10 +14,13 @@ function CreateBook({authFetch,onClose,onCreated}){
     })
 
     const [error,setError]=useState({})
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
 
     async function handlecreatebook(event){
         event.preventDefault()
+        if (isSubmitting) return
+
 
         const newError={}
 
@@ -46,6 +49,8 @@ function CreateBook({authFetch,onClose,onCreated}){
             return
         }
 
+
+        setIsSubmitting(true)
 
         
         try{
@@ -79,6 +84,8 @@ function CreateBook({authFetch,onClose,onCreated}){
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
+        }finally{
+            setIsSubmitting(false)
         }
     }
 
@@ -112,7 +119,7 @@ function CreateBook({authFetch,onClose,onCreated}){
                     <h3>BOOK Cover<span className="required">*</span></h3>
                     <input className={`form-input ${error.book_image ? 'input-error' : ''}`} name="book_image" value={form.book_image} onChange={handlechange} placeholder="Book Cover Link"/>
                     {error.book_image && (<p className="field-error">{error.book_image}</p>)}
-                    <button className="btn">Submit</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>
             </div>
         </div>

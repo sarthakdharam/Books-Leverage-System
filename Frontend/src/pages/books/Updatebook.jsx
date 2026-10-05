@@ -10,15 +10,19 @@ function UpdateBook({authFetch,bookId,onClose,onCreated}){
     const [book_author,setBook_author]=useState('')
     const [total_books,setTotal_books]=useState(0)
     const [category,setCategory]=useState('')
+    const [isSubmitting,setIsSubmitting]=useState(false)
 
     async function handleupdatebook(event){
         event.preventDefault()
       
+        if(isSubmitting)return
 
         if(Number(total_books)<0){
             toast.error('quantity should be atleast 1')
             return
         }
+
+        setIsSubmitting(true)
 
         try{
             const response=await authFetch(`http://localhost:3000/api/books/${bookId}`,
@@ -48,6 +52,8 @@ function UpdateBook({authFetch,bookId,onClose,onCreated}){
         }catch(err){
             console.log(err)
             toast.error('somethiong went wrong,try Again')
+        }finally{
+            setIsSubmitting(false)
         }
     }
 
@@ -89,7 +95,7 @@ function UpdateBook({authFetch,bookId,onClose,onCreated}){
                     <input className="form-input" value={total_books} type="number" onChange={(e)=>setTotal_books(e.target.value)} placeholder="Total Books"/>
                     <h3>BOOK CATEGORY:</h3>
                     <input className="form-input" value={category}  onChange={(e)=>setCategory(e.target.value)} placeholder="Book Category"/>
-                    <button className="btn">Submit</button>
+                    <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>
             </div>
         </div>
