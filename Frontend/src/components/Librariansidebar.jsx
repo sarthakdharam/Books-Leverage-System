@@ -23,26 +23,9 @@ function LibrarianSidebar() {
           👥 Members
         </NavLink>
 
-        <NavLink to="/book/borrow">
-          📖🤝  Borrow Book
-        </NavLink>
-
-        <NavLink to="/book/return">
-          📕📥 Return Book
-        </NavLink>
-
         <NavLink to="/borrow/history">
-          📕➡️ Borrowed Books
+          📕➡️  Books
         </NavLink>
-
-        <NavLink to="/librarian/Myaccount">
-          👦🏽 My Account
-        </NavLink>
-
-        <NavLink to="/librarian/update">
-          ✏️ Edit Info...
-        </NavLink>
-
 
       </nav>
 

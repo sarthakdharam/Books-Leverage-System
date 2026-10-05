@@ -1,13 +1,14 @@
 import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch";
 import { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import LibrarianSidebar from "../../components/Librariansidebar"
+import UpdateLibrarian from "./UpdateLibrarian";
+import { FaEdit } from "react-icons/fa";
 
 
-function MyAccount({authFetch}){
+function MyAccount({authFetch,onClose}){
 
     const [account,setAccount]=useState({})
+    const [showUpdate,setShowUpdate]=useState(false)
 
     async function loadaccount(){
             try{
@@ -31,14 +32,14 @@ function MyAccount({authFetch}){
         loadaccount()
     },[])
     return(
-        <div className="dash-container">
-            <LibrarianSidebar/>
-            <Header/>                      
+        <div className="modal-overlay1" onClick={onClose}>                    
                 
-            <div className="page-container">
-                <h3>My Accuont</h3>
-                <div className="page-container">
-                    
+            <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
+            <div className="form-header"><h3>My Account</h3> 
+            <button type="button" className="update-btn" onClick={()=>setShowUpdate(true)}><FaEdit/></button>
+            <button type="button" className="close-btn" onClick={onClose}>×</button>
+            </div>
+                    <div className="page-container1">
                         <div key={account.id}>
                             <div className="info-row">
                                 <span className="info-label">ID</span>
@@ -65,10 +66,10 @@ function MyAccount({authFetch}){
                                 <span className="info-value">{account.branch}</span>
                             </div>
                         </div>
-                        <br/>
                 </div>
-                <br/>
-            </div>
+                </div>
+            
+            {showUpdate && (<UpdateLibrarian authFetch={authFetch} onClose={()=>setShowUpdate(false)} onCreated={loadaccount}/>)}
         </div>
     )
 }

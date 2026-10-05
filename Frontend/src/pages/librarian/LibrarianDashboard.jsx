@@ -3,8 +3,11 @@ import LibrarianSidebar from "../../components/Librariansidebar"
 import { useState,useEffect } from "react"
 import { toast } from "react-toastify"
 import authFetch from "../../utils/authFetch"
+import MyAccount from "./MyAccount"
 
 function LibrarianDashboard(){
+
+    const [showmyaccount,setShowMyAccount]=useState(false)
 
     const [stats,setStats]=useState({})
     // totalMembers, activeMembers, issuedToday, currentlyBorrowed, overdue, dueSoon
@@ -31,7 +34,8 @@ function LibrarianDashboard(){
     return(
         <div className="dash-container" >
             <LibrarianSidebar/>
-            <Header/>
+            <Header myAccount={()=>setShowMyAccount(true)}/>
+
             <div className="dash-grid">    
                 <div className="dash-card">
                     <h1>Total Number Of Users</h1>
@@ -56,9 +60,9 @@ function LibrarianDashboard(){
                 <div className="dash-card">
                     <h1>DueSoon</h1>
                     <h1>{stats.dueSoon}</h1>
-                </div>
-                
-            </div>        
+                </div>                
+            </div>   
+            {showmyaccount && (<MyAccount authFetch={authFetch} onClose={()=>setShowMyAccount(false)}/>)}     
         </div>
         
     )

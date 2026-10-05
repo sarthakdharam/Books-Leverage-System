@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
-import Header from "../../components/Header";
-import LibrarianSidebar from "../../components/Librariansidebar";
 
 
-function UpdateLibrarian({authFetch}){
+function UpdateLibrarian({authFetch,onClose,onCreated}){
 
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
@@ -43,6 +41,9 @@ function UpdateLibrarian({authFetch}){
             }
 
             toast.success(data.message || 'Upadted Successfully')
+            onCreated()
+            onClose()
+
 
 
         }catch(err){
@@ -55,12 +56,12 @@ function UpdateLibrarian({authFetch}){
     
 
     return(
-        <div className="dash-container">
-            <LibrarianSidebar/>
-            <Header/>                      
-                    
-            <div className="page-container">
-                <h3>Update Info</h3>
+        <div className="modal-overlay1" onClick={onClose}>
+                      
+            <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
+                <div className="form-header"><h3>Update Info</h3> 
+                <button type="button" className="close-btn1" onClick={onClose}>×</button>
+            </div>
                 <form onSubmit={handleupdate}>
                     <h3>Name</h3>
                     <input className="form-input" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Enter Updating name"/>

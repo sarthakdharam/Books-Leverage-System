@@ -407,10 +407,10 @@ tr:hover {
 }
 
 .form-header .update-btn {
-    margin: 10px 0px 10px auto; 
+    margin: 13px 0px 10px auto; 
     background-color: #f5f8f5;
     border:none;
-    color: rgb(8, 8, 8);
+    color: rgb(2, 2, 2);
     font-size: 15px;
     cursor: pointer;
 }

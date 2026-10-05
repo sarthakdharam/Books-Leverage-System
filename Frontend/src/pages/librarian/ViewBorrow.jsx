@@ -4,10 +4,14 @@ import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header";
 import LibrarianSidebar from "../../components/Librariansidebar";
+import BorrowBook from "../books/BorrowBook";
+import ReturnBook from "../books/ReturnBook";
 
 function ViewBorrow({authFetch , }){
 
     const [borrowList,setBorrowList]=useState([])
+    const [showborrowbook,setShowBorrowBook]=useState(false)
+    const [showreturnbook,setShowReturnBook]=useState(false)
 
     async function handleborrowhistory(){
 
@@ -58,7 +62,17 @@ function ViewBorrow({authFetch , }){
     return(
         <div className="dash-container">
             <LibrarianSidebar/>
-            <Header showSearch={true} searchPlaceholder = "Search Borrow" onSearch={handlesearch}/>                      
+            <Header 
+                showBranding={false}
+                title="BOOKS"
+                icon="📚"
+                showSearch={true}
+                searchPlaceholder = "Search Borrow" 
+                onSearch={handlesearch}
+                onCreate={()=>setShowBorrowBook(true)}
+                onReduce={()=>setShowReturnBook(true)}
+
+            />                      
                     
             <div className="table-container">
                     <table>
@@ -97,6 +111,8 @@ function ViewBorrow({authFetch , }){
                         </tbody>
                     </table>
                 </div>
+                {showborrowbook &&(<BorrowBook authFetch={authFetch} onClose={()=>setShowBorrowBook(false)} onCreated={handleborrowhistory}/>)}
+                {showreturnbook &&(<ReturnBook authFetch={authFetch} onClose={()=>setShowReturnBook(false)} onCreated={handleborrowhistory}/>)}
             </div>
     )
 }

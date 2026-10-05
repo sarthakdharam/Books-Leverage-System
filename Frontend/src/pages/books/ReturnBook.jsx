@@ -1,24 +1,31 @@
 import { useState } from "react"
 import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
-import Header from "../../components/Header";
-import LibrarianSidebar from "../../components/Librariansidebar";
 
 
-function ReturnBook({authFetch}){
 
-    const [book_id,setBook_Id]=useState('')
-    const [user_id,setUser_Id]=useState('')
+function ReturnBook({authFetch,onClose,onCreated}){
+
+    const [form,setForm]=useState({
+        user_id:'',
+        book_id:''
+    })
+    const[error,setError]=useState({})
 
     async function handlereturn(event){
         event.preventDefault()
 
-         if(Number(user_id)<=0){
-            toast.error('Enter Correct User Id')
-            return
+        const newError={}
+
+         if(Number(form.user_id)<=0){
+            newError.user_id='Enter Correct User Id'
         }
-        if(Number(book_id)<=0){
-            toast.error('Enter Correct Book Id')
+        if(Number(form.book_id)<=0){
+            newError.book_id='Enter Correct Book Id'
+        }
+
+        if(Object.keys(newError).length>0){
+            setError(newError)
             return
         }
 
@@ -36,8 +43,14 @@ function ReturnBook({authFetch}){
             }
 
             toast.success(data.message || 'book returned successfully')
-            setUser_Id('')
-            setBook_Id('')
+            setForm({
+                user_id:'',
+                book_id:''
+            })
+            setError({})
+            onCreated()
+            onClose()
+
 
         }catch(err){
             console.log(err)
@@ -45,19 +58,26 @@ function ReturnBook({authFetch}){
         }
     }
 
+    function handlechange(e){
+        const {name , value}=e.target
+
+        setForm(prev=>({...prev,[name]:value}))
+        setError(prev=>({...prev,[name]:''}))
+    }
+
     return(
-        <div className="dash-container">
-            <LibrarianSidebar/>
-            <Header/>                      
+        <div className="modal-overlay" onClick={onClose}>                   
                     
-            <div className="page-container">
+            <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
+                <div className="form-header"><h3>Return Book</h3> 
+                <button type="button" className="close-btn1" onClick={onClose}>×</button>
+            </div>
                 <form onSubmit={handlereturn}>
-                    <h3>Return Book</h3>
-                    <br/>
-                    <input className="form-input" value={user_id} onChange={(e)=>setUser_Id(e.target.value)} placeholder="User Id"/>
-                    <br/>
-                    <input className="form-input" value={book_id} onChange={(e)=>setBook_Id(e.target.value)} placeholder="Book Id"/>
-                    <br/>
+                    
+                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} name="user_id" value={form.user_id} onChange={handlechange} placeholder="User Id"/>
+                    {error.user_id && (<p className="field-error">{error.user_id}</p>)}
+                    <input className={`form-input ${error.book_id ? 'input-error' : ''}`} name="book_id" value={form.book_id} onChange={handlechange} placeholder="Book Id"/>
+                    {error.book_id && (<p className="field-error">{error.book_id}</p>)}
                     <button className="btn">Submit</button>
                 </form>
             </div>
