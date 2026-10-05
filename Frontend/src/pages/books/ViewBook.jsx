@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import CreateBook from "./CreateBook"
 import withAuthFetch from "../../HOC/withAuthFetch"
 import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
+import Updatebook from "./Updatebook"
 
 function ViewBook({authFetch}){
     const [booklist,setBookList]=useState([])
     const [showCreateBook, setShowCreateBook] = useState(false)
-    const navigate=useNavigate()
+    const [showUpdateBook, setShowUpdateBook] = useState(false)
+    const [selectedBookId, setSelectedBookId] = useState(null)
    
    
     
@@ -76,7 +77,8 @@ function ViewBook({authFetch}){
     }, [])
 
     function handleupdate(id){
-        return navigate(`/books/update/${id}`)
+        setSelectedBookId(id)
+        setShowUpdateBook(true)
     }
 
     return(
@@ -139,6 +141,7 @@ function ViewBook({authFetch}){
                 </table>
             </div>  
             {showCreateBook && (<CreateBook authFetch={authFetch} onClose={()=>setShowCreateBook(false)} onCreated={handleviewbook}/>)}
+            {showUpdateBook && (<Updatebook authFetch={authFetch} bookId={selectedBookId} onClose={()=>setShowUpdateBook(false)} onCreated={handleviewbook}/>)}
        </div>
     )
 }

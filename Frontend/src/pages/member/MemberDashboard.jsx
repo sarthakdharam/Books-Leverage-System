@@ -1,24 +1,30 @@
 import SearchBook from "../books/SearchBook"
 import Header from "../../components/Header"
 import MemberSidebar from "../../components/MemberSidebar"
+import withAuthFetch from "../../HOC/withAuthFetch";
+import { useState } from "react";
+import UserAccount from "./UserAccount";
 
-function MemberDashboard(){
+function MemberDashboard({authFetch}){
 
+    const [showMyAccount, setShowMyAccount] = useState(false);
     
     return(
         <div className="dash-container">
             <MemberSidebar/>
-            <Header/>
+            <Header 
+                showBranding={true}
+                myAccount={()=>setShowMyAccount(true)}
+            />
                 
             
-            <div style={{ 
-                marginLeft:'250px',
-                marginTop:'50px'
-             }}>
+            <div>
                 <SearchBook></SearchBook>
             </div>
+
+            {showMyAccount &&(<UserAccount authFetch={authFetch} onClose={()=>setShowMyAccount(false)}/>)}
         </div>
         
     )
 }
-export default MemberDashboard
+export default withAuthFetch(MemberDashboard)

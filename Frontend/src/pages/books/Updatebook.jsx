@@ -1,22 +1,15 @@
 import { useState,useEffect } from "react"
-import { useParams } from "react-router-dom"
 import withAuthFetch from "../../HOC/withAuthFetch"
-import Header from "../../components/Header";
-import AdminSidebar from "../../components/Adminsidebar";
 import { toast } from "react-toastify";
 
 
 
-function UpdateBook({authFetch}){
+function UpdateBook({authFetch,bookId,onClose,onCreated}){
 
     const [book_name,setBook_name]=useState('')
     const [book_author,setBook_author]=useState('')
     const [total_books,setTotal_books]=useState(0)
     const [category,setCategory]=useState('')
-
-    const {id}=useParams()
-
-   
 
     async function handleupdatebook(event){
         event.preventDefault()
@@ -28,7 +21,7 @@ function UpdateBook({authFetch}){
         }
 
         try{
-            const response=await authFetch(`http://localhost:3000/api/books/${id}`,
+            const response=await authFetch(`http://localhost:3000/api/books/${bookId}`,
                 {
                     method:'PATCH',
                     body:JSON.stringify({book_name,book_author,total_books,category})
@@ -48,6 +41,9 @@ function UpdateBook({authFetch}){
             setTotal_books(0)
             setCategory('')
 
+            onCreated()
+            onClose()
+
             
         }catch(err){
             console.log(err)
@@ -62,7 +58,7 @@ function UpdateBook({authFetch}){
             const response = await authFetch('http://localhost:3000/api/books')
             const data=await response.json()
 
-            const foundBook=data.find((book)=>book.id===Number(id))
+            const foundBook=data.find((book)=>book.id===Number(bookId))
 
             if(foundBook){
                 setBook_name(foundBook.book_name)
@@ -76,12 +72,14 @@ function UpdateBook({authFetch}){
         }
 
         loadbooks()
-    },[])
+    },[bookId])
     return(
-        <div className="dash-container">
-            <AdminSidebar/>
-            <Header/>                      
-            <div className="page-container">
+        <div className="modal-overlay" onClick={onClose}>
+                   
+            <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
+                <div className="form-header"><h3>Update Book</h3> 
+                <button type="button" className="close-btn" onClick={onClose}>×</button>
+            </div>
                 <form onSubmit={handleupdatebook}>
                     <h3>BOOK NAME:</h3>
                     <input className="form-input" value={book_name} onChange={(e)=>setBook_name(e.target.value)} placeholder="Book Name"/>
@@ -91,8 +89,6 @@ function UpdateBook({authFetch}){
                     <input className="form-input" value={total_books} type="number" onChange={(e)=>setTotal_books(e.target.value)} placeholder="Total Books"/>
                     <h3>BOOK CATEGORY:</h3>
                     <input className="form-input" value={category}  onChange={(e)=>setCategory(e.target.value)} placeholder="Book Category"/>
-                    <br/>
-                    <br/>
                     <button className="btn">Submit</button>
                 </form>
             </div>

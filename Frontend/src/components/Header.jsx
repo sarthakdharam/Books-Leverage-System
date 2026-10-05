@@ -1,9 +1,10 @@
 import logo from '../assets/logo.png'
-import { FaPlus } from "react-icons/fa"; 
+import { FaPlus,FaUserCircle } from "react-icons/fa"; 
 
 function Header({
     children,
     onCreate,
+    myAccount,
     showSearch = false,
     searchPlaceholder = "Search",
     onSearch,
@@ -30,8 +31,11 @@ function Header({
                 )}
         </div>
         <div className='header-actions'>
+
+            
             {showSearch && (<input className="header-input" placeholder={searchPlaceholder} onChange={(e) => onSearch(e.target.value)}/>)}
             {onCreate && (<button className="create-plus" onClick={onCreate}><FaPlus /></button>)}
+            {myAccount && (<button className="myaccount-btn" onClick={myAccount}><FaUserCircle size={30} color="#e9dede"/></button>)}
             {children}
         </div>
     </header>)

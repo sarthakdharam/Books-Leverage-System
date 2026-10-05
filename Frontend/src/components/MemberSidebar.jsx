@@ -22,16 +22,7 @@ function MemberSidebar() {
         <NavLink to="/Myborrow">
           📚 My Borrow
         </NavLink>
-
-        <NavLink to="/user/Myaccount">
-          👦🏽 My Account
-        </NavLink>
-
-        <NavLink to="/user/update">
-          ✏️ Edit Info...
-        </NavLink>
-
-
+        
       </nav>
 
       <div className="sidebar-bottom">

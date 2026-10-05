@@ -27,10 +27,7 @@ body {
 }
 
 .page-container1{
-    max-width:400px;
-    max-height: auto;
-    margin: 40px auto;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #f5f8f5;
     border-radius: 10px;
     justify-content: center;
@@ -146,7 +143,7 @@ tr:hover {
 .search-input {
     padding: 10px;
     max-width: 400px;
-    margin: 0 auto 20px auto;
+    margin: 20px auto 20px auto;
     display: block;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -158,7 +155,6 @@ tr:hover {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    margin-left: -180px;
     box-sizing: border-box;
 }
 
@@ -393,11 +389,29 @@ tr:hover {
 }
 
 .form-header .close-btn {
+    margin: 10px 15px 10px 10px; 
+    background-color: #f5f8f5;
+    border:none;
+    color: red;
+    font-size: x-large;
+    cursor: pointer;
+}
+
+.form-header .close-btn1 {
     margin: 10px 15px 10px auto; 
     background-color: #f5f8f5;
     border:none;
     color: red;
     font-size: x-large;
+    cursor: pointer;
+}
+
+.form-header .update-btn {
+    margin: 10px 0px 10px auto; 
+    background-color: #f5f8f5;
+    border:none;
+    color: rgb(8, 8, 8);
+    font-size: 15px;
     cursor: pointer;
 }
 
@@ -445,5 +459,43 @@ tr:hover {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.myaccount-btn {
+    width: 36px;
+    height: 36px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 18px;
+}
+
+.modal-overlay1 {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    align-items:baseline;
+    z-index: 0;
+}
+
+.modal-form1 {
+    width: 50px;
+    max-width: 90%;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #be9a17;
+    border-radius: 5px;
+    background-color: #f5f8f5;
+    overflow: visible;
 }
 

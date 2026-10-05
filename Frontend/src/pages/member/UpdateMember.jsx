@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
-import Header from "../../components/Header";
-import MemberSidebar from "../../components/MemberSidebar";
 
 
-function UpdateMember({authFetch}){
+function UpdateMember({authFetch,onClose,onCreated}){
 
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
@@ -49,6 +47,9 @@ function UpdateMember({authFetch}){
             setPhone('')
             setPassword('')
 
+            onCreated()
+            onClose()
+
 
         }catch(err){
             console.log(err)
@@ -60,12 +61,12 @@ function UpdateMember({authFetch}){
     
 
     return(
-        <div className="dash-container">
-            <MemberSidebar/>
-            <Header/>                      
+        <div className="modal-overlay1" onClick={onClose}>                    
                     
-            <div className="page-container">
-                <h3>Update Info</h3>
+            <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
+                <div className="form-header"><h3>Update Info</h3> 
+                <button type="button" className="close-btn1" onClick={onClose}>×</button>
+            </div>
                 <form onSubmit={handleupdate}>
                     <h3>Name</h3>
                     <input className="form-input" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Enter Updating name"/>

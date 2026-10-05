@@ -2,28 +2,31 @@
 import withAuthFetch from "../../HOC/withAuthFetch";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import MemberSidebar from "../../components/MemberSidebar";
+import { FaEdit } from "react-icons/fa";
+import UpdateMember from "./UpdateMember";
 
 
-function UserAccount({authFetch}){
+
+function UserAccount({authFetch,onClose}){
 
     const [account,setAccount]=useState({})
+    const [showUpdate,setShowUpdate]=useState(false)
 
     
 
     async function loadaccount(){
-        toast.error('')
-            try{
+        try{
 
             const response = await authFetch('http://localhost:3000/api/users/myaccount')
             const data=await response.json()
 
             if(!response.ok){
                 toast.error('Error while fetching')
+                return
             }
 
             setAccount(data)
+            
 
         }catch(err){
             console.log(err)
@@ -35,12 +38,13 @@ function UserAccount({authFetch}){
         loadaccount()
     },[])
     return(
-        <div className="dash-container">
-            <MemberSidebar/>
-            <Header/>                      
+        <div className="modal-overlay1" onClick={onClose}>                     
                    
-            <div className="page-container">
-                <h3>My Accuont</h3>
+            <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
+                <div className="form-header"><h3>My Account</h3> 
+                <button type="button" className="update-btn" onClick={()=>setShowUpdate(true)}><FaEdit/></button>
+                <button type="button" className="close-btn" onClick={onClose}>×</button>
+            </div>
                 <div className="page-container1">
                     
                         <div key={account.id}>
@@ -65,10 +69,9 @@ function UserAccount({authFetch}){
                                 <span className="info-value">{account.phone}</span>
                             </div>
                         </div>
-                        <br/>
                 </div>
-                <br/>
             </div>
+            {showUpdate && (<UpdateMember authFetch={authFetch} onClose={()=>setShowUpdate(false)} onCreated={loadaccount}/>)}
         </div>
     )
 }
