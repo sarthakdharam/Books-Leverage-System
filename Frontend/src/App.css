@@ -521,3 +521,52 @@ tr:hover {
         transform: rotate(360deg);
     }
 }
+
+
+.book-search-container {
+    position: relative;
+    width: 100%;
+}
+
+.book-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white
+}
+
+.book-suggestion {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.book-suggestion:last-child {
+    border-bottom: none;
+}
+
+.book-suggestion:hover {
+    background-color: #f1f5f9;
+}
+
+.book-name {
+    font-weight: 600;
+    color: #414e67;
+}
+
+.searching-text {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    z-index: 3000;
+    color: #777;
+    font-size: 13px;
+}

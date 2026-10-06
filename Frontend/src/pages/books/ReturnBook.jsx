@@ -10,8 +10,70 @@ function ReturnBook({authFetch,onClose,onCreated}){
         user_id:'',
         book_id:''
     })
+    const [bookSearch, setBookSearch] = useState('')
+    const [bookSuggestions, setBookSuggestions] = useState([])
     const[error,setError]=useState({})
     const [isSubmitting,setIsSubmitting]=useState(false)
+
+    async function searchBooks(value) {
+
+        setBookSearch(value)
+
+        setForm(prev => ({
+            ...prev,
+            book_id: ''
+        }))
+
+        setError(prev => ({
+            ...prev,
+            book_id: ''
+        }))
+
+        if (!value.trim()) {
+            setBookSuggestions([])
+            return
+        }
+
+        try {
+
+            const response = await authFetch(
+                `http://localhost:3000/api/books/search?book_name=${value}`
+            )
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                setBookSuggestions([])
+                return
+            }
+
+            setBookSuggestions(data)
+
+        } catch (err) {
+
+            console.log(err)
+            setBookSuggestions([])
+
+        }
+    }
+
+
+    function selectBook(book) {
+
+        setBookSearch(book.book_name)
+
+        setForm(prev => ({
+            ...prev,
+            book_id: book.id
+        }))
+
+        setBookSuggestions([])
+
+        setError(prev => ({
+            ...prev,
+            book_id: ''
+        }))
+    }
 
     async function handlereturn(event){
         event.preventDefault()
@@ -37,7 +99,7 @@ function ReturnBook({authFetch,onClose,onCreated}){
         try{
             const response=await authFetch(`http://localhost:3000/api/borrow/return`,{
                 method:'PATCH',
-                body:JSON.stringify({user_id,book_id})
+                body:JSON.stringify(form)
             })
 
             const data=await response.json()
@@ -83,7 +145,18 @@ function ReturnBook({authFetch,onClose,onCreated}){
                     
                     <input className={`form-input ${error.user_id ? 'input-error' : ''}`} name="user_id" value={form.user_id} onChange={handlechange} placeholder="User Id"/>
                     {error.user_id && (<p className="field-error">{error.user_id}</p>)}
-                    <input className={`form-input ${error.book_id ? 'input-error' : ''}`} name="book_id" value={form.book_id} onChange={handlechange} placeholder="Book Id"/>
+                    <div className="book-search-container">
+                    <input className={`form-input ${error.book_id ? 'input-error' : ''}`} value={bookSearch} onChange={(e) => searchBooks(e.target.value)} placeholder="Search Book Name" autoComplete="off"/>
+                    {bookSuggestions.length > 0 && (
+                        <div className="book-suggestions">
+                                {bookSuggestions.map(book => (
+                                    <div key={book.id} className="book-suggestion" onClick={() => selectBook(book)}>
+                                        <div className="book-name">{book.book_name}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                     {error.book_id && (<p className="field-error">{error.book_id}</p>)}
                     <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting</span>):('Submit')}</button>
                 </form>

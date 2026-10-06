@@ -11,6 +11,11 @@ const BorrowBook = async (req,res)=>{
         if(!user){
             return res.status(404).json({message:'User Not Found'})
         }
+        if(user){
+            if(user.is_active===false){
+                return res.status(404).json({message:'User Not active'})
+            }
+        }
         
         const book = await BookRepository.findOneBy({id:book_id})
         if(!book){
