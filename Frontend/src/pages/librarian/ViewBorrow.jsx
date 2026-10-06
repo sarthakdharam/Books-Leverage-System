@@ -58,6 +58,11 @@ function ViewBorrow({authFetch , }){
 
     useEffect(()=>{
         handleborrowhistory()
+        const interval = setInterval(() => {
+            handleborrowhistory()
+        }, 60000)
+
+        return () => clearInterval(interval)
     },[])
     return(
         <div className="dash-container">

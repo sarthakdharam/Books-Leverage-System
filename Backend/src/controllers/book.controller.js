@@ -103,8 +103,9 @@ const updatebook = async (req, res) => {
         if (book_name) book.book_name = book_name
         if (book_author) book.book_author = book_author
         if (total_books) {
-            book.total_books += total_books
-            book.available_books += total_books
+            const addcount=Number(total_books)
+            book.total_books += addcount
+            book.available_books += addcount
         }
         if (category) book.category = category
 

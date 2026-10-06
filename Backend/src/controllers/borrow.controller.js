@@ -147,7 +147,27 @@ const getBorrowLogs = async (req, res) => {
             order: { borrow_date: 'DESC' }
         })
 
-        res.status(200).json(records)
+        const today =new Date()
+
+        const updatedRecords=records.map(record=>{
+            let currentFine=record.fine_amount || 0
+
+            if(record.status === 'borrowed'){
+                const duedate = new Date(record.due_date)
+
+                if(today>duedate){
+                    const daysLate=Math.ceil(
+                    (today-duedate)/(1000*60*60*24))
+
+                    currentFine=daysLate*5
+                }else{
+                    currentFine=0
+                }
+            }
+            return {...record,fine_amount:currentFine}
+        })
+
+        res.status(200).json(updatedRecords)
 
     } catch (err) {
         console.log(err)
