@@ -52,44 +52,59 @@ const BorrowBook = async (req,res)=>{
 
 const returnbook=async(req,res)=>{
     try{
-        const{user_id,book_id}=req.body
+        const{user_id,book_ids}=req.body
         const librarian_id = req.user.userID 
-        const book = await BookRepository.findOneBy({id:book_id})
-        if(!book){
-            return res.status(404).json({message:'Book Not Found'})
+
+        if (!Array.isArray(book_ids) || book_ids.length === 0) {
+            return res.status(400).json({
+                message: 'Please select at least one book'
+            })
         }
-        const record=await BorrowRepository.findOne({
-            where:{
-                user:{id:user_id},
-                book:{id:book_id},
-                status:'borrowed'
-            },
-            relations: {book:true,user:true,librarian:true}
-        })
+        const returnedBooks = []
 
-        if(!record){
-            return res.status(404).json({message:'No active borrow record found for this user and book'})
+        for (const book_id of book_ids) {
+
+            const book = await BookRepository.findOneBy({id:book_id})
+            if(!book){
+                return res.status(404).json({message: `Book with ID ${book_id} not found`})
+            }
+            const record=await BorrowRepository.findOne({
+                where:{
+                    user:{id:user_id},
+                    book:{id:book_id},
+                    status:'borrowed'
+                },
+                relations: {book:true,user:true,librarian:true}
+            })
+    
+            if(!record){
+                return res.status(404).json({message:`No active borrow record found for book ID ${book_id}`})
+            }
+    
+            if (record.librarian.id !== librarian_id) {
+                return res.status(403).json({ message: `You cannot return book ID ${book_id}. Only the librarian who issued this book can process its return`})
+            }
+    
+            const returndate=new Date()
+            record.status='returned'
+            record.return_date=returndate
+    
+            const duedate=new Date(record.due_date)
+            if(returndate > duedate){
+                const dayslate=Math.ceil((returndate-duedate)/(1000*60*60*24))//convert the millisecond to day
+                record.fine_amount=dayslate*5
+            }else{
+                record.fine_amount=0
+            }
+            await BorrowRepository.save(record)
+            
+            record.book.available_books +=1
+            await BookRepository.save(record.book)
+
+            returnedBooks.push(record)
+    
         }
-
-        if (record.librarian.id !== librarian_id) {
-            return res.status(403).json({ message: 'Only the librarian who issued this book can process its return' })
-        }
-
-        const returndate=new Date()
-        record.status='returned'
-        record.return_date=returndate
-
-        const duedate=new Date(record.due_date)
-        if(returndate > duedate){
-            const dayslate=Math.ceil((returndate-duedate)/(1000*60*60*24))//convert the millisecond to day
-            record.fine_amount=dayslate*5
-        }
-        await BorrowRepository.save(record)
-        
-        record.book.available_books +=1
-        await BookRepository.save(record.book)
-
-        res.status(200).json(record)
+        res.status(200).json({message: 'Books returned successfully', records: returnedBooks})
     }catch(err){
         console.log(err)
         return res.status(500).json({message:'Error Returning book',error:err.message})

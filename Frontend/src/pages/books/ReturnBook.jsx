@@ -7,68 +7,108 @@ import withAuthFetch from "../../HOC/withAuthFetch"
 function ReturnBook({authFetch,onClose,onCreated}){
 
     const [form,setForm]=useState({
-        user_id:'',
-        book_id:''
+        user_id:''
     })
-    const [bookSearch, setBookSearch] = useState('')
-    const [bookSuggestions, setBookSuggestions] = useState([])
-    const[error,setError]=useState({})
+
+    const [userSearch,setUserSearch]=useState('')
+    const [userSuggestions, setUserSuggestions] = useState([])
+    const [borrowedBooks, setBorrowedBooks] = useState([])
+    const [selectedBookIds, setSelectedBookIds] = useState([])
+    const [error,setError]=useState({})
     const [isSubmitting,setIsSubmitting]=useState(false)
 
-    async function searchBooks(value) {
+    async function searchUsers(value) {
 
-        setBookSearch(value)
+        setUserSearch(value)
 
         setForm(prev => ({
             ...prev,
-            book_id: ''
+            user_id: ''
         }))
+
+        setBorrowedBooks([])
+        setSelectedBookIds([])
 
         setError(prev => ({
             ...prev,
-            book_id: ''
+            user_id: ''
         }))
 
         if (!value.trim()) {
-            setBookSuggestions([])
+            setUserSuggestions([])
             return
         }
 
         try {
 
             const response = await authFetch(
-                `http://localhost:3000/api/books/search?book_name=${value}`
+                `http://localhost:3000/api/users/search?name=${value}`
             )
 
             const data = await response.json()
 
             if (!response.ok) {
-                setBookSuggestions([])
+                setUserSuggestions([])
                 return
             }
 
-            setBookSuggestions(data)
+            setUserSuggestions(data)
 
-        } catch (err) {
+        }catch(err) {
 
             console.log(err)
-            setBookSuggestions([])
+            setUserSuggestions([])
 
         }
     }
 
 
-    function selectBook(book) {
+     async function selectUser(user) {
 
-        setBookSearch(book.book_name)
+        setUserSearch(user.name)
 
         setForm(prev => ({
             ...prev,
-            book_id: book.id
+            user_id: user.id
         }))
 
-        setBookSuggestions([])
+        setUserSuggestions([])
+        setSelectedBookIds([])
 
+        setError(prev => ({
+            ...prev,
+            user_id: ''
+        }))
+        await loadBorrowedBooks(user.id)
+    }
+
+    async function loadBorrowedBooks(userId) {
+
+        try {
+            const response = await authFetch(`http://localhost:3000/api/borrow/logs`)
+            const data = await response.json()
+            
+            if (!response.ok) {
+                setBorrowedBooks([])
+                return
+            }
+
+            const books = data.filter(record =>record.user.id === Number(userId) && record.status === 'borrowed')
+            setBorrowedBooks(books)
+        } catch(err) {
+            console.log(err)
+            setBorrowedBooks([])
+        }
+    }
+
+
+    function handleBookCheckbox(bookId) {
+        setSelectedBookIds(prev => {
+            if (prev.includes(bookId)) {
+                return prev.filter(id => id !== bookId)
+            }
+            return [...prev, bookId]
+        })
         setError(prev => ({
             ...prev,
             book_id: ''
@@ -82,11 +122,12 @@ function ReturnBook({authFetch,onClose,onCreated}){
           
         const newError={}
 
-         if(Number(form.user_id)<=0){
-            newError.user_id='Enter Correct User Id'
+        if (!form.user_id) {
+            newError.user_id = 'Select a User'
         }
-        if(Number(form.book_id)<=0){
-            newError.book_id='Enter Correct Book Id'
+
+        if (borrowedBooks.length > 0 && selectedBookIds.length === 0) {
+            newError.book_id = 'Select at least one book'
         }
 
         if(Object.keys(newError).length>0){
@@ -99,7 +140,7 @@ function ReturnBook({authFetch,onClose,onCreated}){
         try{
             const response=await authFetch(`http://localhost:3000/api/borrow/return`,{
                 method:'PATCH',
-                body:JSON.stringify(form)
+                body:JSON.stringify({user_id:form.user_id,book_ids: selectedBookIds})
             })
 
             const data=await response.json()
@@ -127,13 +168,6 @@ function ReturnBook({authFetch,onClose,onCreated}){
         }
     }
 
-    function handlechange(e){
-        const {name , value}=e.target
-
-        setForm(prev=>({...prev,[name]:value}))
-        setError(prev=>({...prev,[name]:''}))
-    }
-
     return(
         <div className="modal-overlay" onClick={onClose}>                   
                     
@@ -142,20 +176,34 @@ function ReturnBook({authFetch,onClose,onCreated}){
                 <button type="button" className="close-btn1" onClick={onClose} title="close">×</button>
             </div>
                 <form onSubmit={handlereturn}>
-                    
-                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} name="user_id" value={form.user_id} onChange={handlechange} placeholder="User Id"/>
-                    {error.user_id && (<p className="field-error">{error.user_id}</p>)}
                     <div className="book-search-container">
-                    <input className={`form-input ${error.book_id ? 'input-error' : ''}`} value={bookSearch} onChange={(e) => searchBooks(e.target.value)} placeholder="Search Book Name" autoComplete="off"/>
-                    {bookSuggestions.length > 0 && (
+                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} value={userSearch} onChange={(e)=>searchUsers(e.target.value)} placeholder="Search User Name" autoComplete="off"/>
+                    {userSuggestions.length > 0 && (
                         <div className="book-suggestions">
-                                {bookSuggestions.map(book => (
-                                    <div key={book.id} className="book-suggestion" onClick={() => selectBook(book)}>
-                                        <div className="book-name">{book.book_name}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                            {userSuggestions.map(user=>(
+                                <div key={user.id} className="book-suggestion" onClick={()=>selectUser(user)}>
+                                    <div className="book-name">{user.name}</div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {error.user_id && (<p className="field-error">{error.user_id}</p>)}
+                    </div>
+                    <div className="book-search-container">
+                        {form.user_id && borrowedBooks.length > 0 && (
+                        <div className="borrowed-books">
+                            <h3>Borrowed Books</h3>
+                            {borrowedBooks.map(record => (
+                                <label key={record.id} className="borrowed-book-item">
+                                    <input type="checkbox" checked={selectedBookIds.includes(record.book.id)} onChange={() => handleBookCheckbox(record.book.id)}/>
+                                    <span>{record.book.book_name}</span>
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                    {form.user_id && borrowedBooks.length === 0 && (
+                        <p className="no-borrowed-books">This user has no currently borrowed books.</p>
+                    )}
                     </div>
                     {error.book_id && (<p className="field-error">{error.book_id}</p>)}
                     <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting</span>):('Submit')}</button>
