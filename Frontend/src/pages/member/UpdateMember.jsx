@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState ,useEffect} from "react"
 import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
 
@@ -64,7 +64,31 @@ function UpdateMember({authFetch,onClose,onCreated}){
 
     }
 
+    useEffect(()=>{
+            async function loadmember(){
+                try{
     
+                const response = await authFetch('http://localhost:3000/api/users/myaccount')
+                const data=await response.json()
+    
+                if(!response.ok){
+                    toast.error('Error while loading data')
+                    return
+                }
+                setName(data.name)
+                setEmail(data.email)
+                setPhone(data.phone)
+                setPassword(data.password)
+                
+    
+            }catch(err){
+                console.log(err)
+                toast.error('something went wrong ,try again')
+            }
+            }
+    
+            loadmember()
+        },[])    
 
     return(
         <div className="modal-overlay1" onClick={onClose}>                    

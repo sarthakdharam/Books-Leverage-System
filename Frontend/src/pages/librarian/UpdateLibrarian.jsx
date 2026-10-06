@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { toast } from "react-toastify";
 import withAuthFetch from "../../HOC/withAuthFetch"
 
@@ -58,6 +58,32 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
         }
 
     }
+
+    useEffect(()=>{
+        async function loadlibrarian(){
+            try{
+
+            const response = await authFetch('http://localhost:3000/api/librarian/myaccount')
+            const data=await response.json()
+
+            if(!response.ok){
+                toast.error('Error while loading data')
+                return
+            }
+            setName(data.name)
+            setEmail(data.email)
+            setPhone(data.phone)
+            setPassword(data.password)
+            
+
+        }catch(err){
+            console.log(err)
+            toast.error('something went wrong ,try again')
+        }
+        }
+
+        loadlibrarian()
+    },[])
 
     
 
