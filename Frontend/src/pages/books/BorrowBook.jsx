@@ -8,6 +8,8 @@ function BorrowBook({ authFetch, onClose, onCreated }) {
         user_id: '',
         book_id: ''
     })
+    const [userSearch,setUserSearch]=useState('')
+    const [userSuggestions, setUserSuggestions] = useState([])
 
     const [bookSearch, setBookSearch] = useState('')
     const [bookSuggestions, setBookSuggestions] = useState([])
@@ -15,6 +17,65 @@ function BorrowBook({ authFetch, onClose, onCreated }) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState({})
 
+    async function searchUsers(value) {
+
+        setUserSearch(value)
+
+        setForm(prev => ({
+            ...prev,
+            user_id: ''
+        }))
+
+        setError(prev => ({
+            ...prev,
+            user_id: ''
+        }))
+
+        if (!value.trim()) {
+            setUserSuggestions([])
+            return
+        }
+
+        try {
+
+            const response = await authFetch(
+                `http://localhost:3000/api/users/search?name=${value}`
+            )
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                setUserSuggestions([])
+                return
+            }
+
+            setUserSuggestions(data)
+
+        }catch(err) {
+
+            console.log(err)
+            setUserSuggestions([])
+
+        }
+    }
+
+
+    function selectUser(user) {
+
+        setUserSearch(user.name)
+
+        setForm(prev => ({
+            ...prev,
+            user_id: user.id
+        }))
+
+        setUserSuggestions([])
+
+        setError(prev => ({
+            ...prev,
+            user_id: ''
+        }))
+    }
 
     async function searchBooks(value) {
 
@@ -85,8 +146,8 @@ function BorrowBook({ authFetch, onClose, onCreated }) {
 
         const newError = {}
 
-        if (Number(form.user_id) <= 0) {
-            newError.user_id = 'Enter Correct User Id'
+        if (!form.user_id) {
+            newError.user_id = 'Select a User'
         }
 
         if (!form.book_id) {
@@ -123,6 +184,8 @@ function BorrowBook({ authFetch, onClose, onCreated }) {
                 book_id: ''
             })
 
+            setUserSearch('')
+            setUserSuggestions([])
             setBookSearch('')
             setBookSuggestions([])
             setError({})
@@ -143,16 +206,6 @@ function BorrowBook({ authFetch, onClose, onCreated }) {
     }
 
 
-    function handlechange(e) {
-
-        const { name, value } = e.target
-
-        setForm(prev => ({...prev,[name]: value}))
-
-        setError(prev => ({...prev,[name]: ''}))
-    }
-
-
     return (
         <div className="modal-overlay" onClick={onClose}>
 
@@ -163,9 +216,19 @@ function BorrowBook({ authFetch, onClose, onCreated }) {
 
 
                 <form onSubmit={handleborrow}>
-                    
-                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} name="user_id" value={form.user_id} onChange={handlechange} placeholder="User Id"/>
+                    <div className="book-search-container">
+                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} value={userSearch} onChange={(e)=>searchUsers(e.target.value)} placeholder="Search User Name" autoComplete="off"/>
+                    {userSuggestions.length > 0 && (
+                        <div className="book-suggestions">
+                            {userSuggestions.map(user=>(
+                                <div key={user.id} className="book-suggestion" onClick={()=>selectUser(user)}>
+                                    <div className="book-name">{user.name}</div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     {error.user_id && (<p className="field-error">{error.user_id}</p>)}
+                    </div>
                     <div className="book-search-container">
                     <input className={`form-input ${error.book_id ? 'input-error' : ''}`} value={bookSearch} onChange={(e) => searchBooks(e.target.value)} placeholder="Search Book Name" autoComplete="off"/>
                     {bookSuggestions.length > 0 && (
