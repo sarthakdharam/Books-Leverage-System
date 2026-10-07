@@ -6,6 +6,7 @@ import Header from "../../components/Header"
 import LibrarianSidebar from "../../components/Librariansidebar"
 import ConfirmActivatemember from "./ConfirmActivatemember"
 import ConfirmDeactivateMember from "./ConfirmDeactivateMember"
+import { FaToggleOff, FaToggleOn } from "react-icons/fa"
 
 function ViewMember({authFetch}){
     const [userList,setUserList]=useState([])
@@ -134,7 +135,7 @@ function ViewMember({authFetch}){
                 {!loading && <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>User Photo</th>
                             <th>Name</th>
                             <th>UserName</th>
                             <th>Email</th>
@@ -146,17 +147,17 @@ function ViewMember({authFetch}){
                     <tbody>
                         {userList.map(user=>(
                             <tr key={user.id}>
-                                <td>{user.id}</td>
+                                <td>👤</td>
                                 <td>{user.name}</td>
                                 <td>{user.username}</td>
                                 <td>{user.email}</td>
                                 <td>{user.phone}</td>
                                 <td>{user.is_active ? 'Active' : 'Inactive'}</td>
                                 <td>
-                                    <button className="btn"  onClick={() => {user.is_active ? handleDeactivateClick(user.id):handleActivateClick(user.id)}}>
-                                        {user.is_active ? 'Deactivate' : 'Activate'}
+                                    <button className="toggle"  onClick={() => {user.is_active ? handleDeactivateClick(user.id):handleActivateClick(user.id)}}>
+                                        {user.is_active ? <FaToggleOn /> : <FaToggleOff/>}
                                     </button>
-                                </td>
+                                </td>                    
                             </tr>
                         ))}
                     </tbody>

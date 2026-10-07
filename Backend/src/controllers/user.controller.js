@@ -13,7 +13,7 @@ const createUser = async (req,res)=>{
         const user=await userRepository.findOneBy({username:username})
         if(user || admin || librarian){
             console.log('user alredy exist')
-            return res.status(409).json({message:'User already exist'})
+            return res.status(409).json({message:'Username already exist'})
         }
 
         const hashPassword = await bcrypt.hash(password,10)
