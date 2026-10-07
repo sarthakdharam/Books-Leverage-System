@@ -6,6 +6,7 @@ import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 import Updatebook from "./Updatebook"
 import ConfirmActivate from "./ConfirmActivate"
+import ConfirmDeactivate from "./ConfirmDeactivate"
 
 function ViewBook({authFetch}){
     const [booklist,setBookList]=useState([])
@@ -13,6 +14,7 @@ function ViewBook({authFetch}){
     const [showUpdateBook, setShowUpdateBook] = useState(false)
     const [selectedBookId, setSelectedBookId] = useState(null)
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
+    const [showDeativateConfirm, setShowDeactivateConfirm] = useState(false)
    
    
     
@@ -109,6 +111,10 @@ function ViewBook({authFetch}){
         setSelectedBookId(id)
         setShowActivateConfirm(true)
     }
+    function handleDeactivateClick(id){
+        setSelectedBookId(id)
+        setShowDeactivateConfirm(true)
+    }
 
     return(
         <div className="dash-container">
@@ -161,7 +167,7 @@ function ViewBook({authFetch}){
                                     <button className='btn' onClick={()=>handleupdate(book.id)}>Update</button>
                                 </td>
                                 <td>
-                                    <button className="btn" onClick={() => book.is_active? deactivate(book.id):handleActivateClick(book.id)}>
+                                    <button className="btn" onClick={() => book.is_active? handleDeactivateClick(book.id):handleActivateClick(book.id)}>
                                         {book.is_active ? 'Deactivate' : 'Activate'}
                                     </button>
                                 </td>
@@ -174,6 +180,8 @@ function ViewBook({authFetch}){
             {showUpdateBook && (<Updatebook authFetch={authFetch} bookId={selectedBookId} onClose={()=>setShowUpdateBook(false)} onCreated={handleviewbook}/>)}
             {showActivateConfirm && (<ConfirmActivate onConfirm={async () => {await activate(selectedBookId) 
                 setShowActivateConfirm(false)}} onClose={() => setShowActivateConfirm(false)}/>)}
+            {showDeativateConfirm && (<ConfirmDeactivate onConfirm={async () => {await deactivate(selectedBookId) 
+                setShowDeactivateConfirm(false)}} onClose={() => setShowDeactivateConfirm(false)}/>)}    
        </div>
     )
 }

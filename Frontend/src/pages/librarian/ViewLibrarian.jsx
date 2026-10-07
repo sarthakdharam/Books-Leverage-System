@@ -5,12 +5,14 @@ import Header from "../../components/Header"
 import AdminSidebar from "../../components/Adminsidebar"
 import CreateLibrarian from "./CreateLibrarian"
 import ConfirmActivatelibrarian from "./ConfirmActivateLibrarian"
+import ConfirmDeactivateLib from "./ConfirmDeactivateLib"
 
 function ViewLibrarian({authFetch}){
     const [librarianList,setLibrarianList]=useState([])
     const [showCreateLibrarian,setShowCreateLibrarian]=useState()
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
     const [selectedLibrarianId, setSelectedLibrarianId] = useState(null)
+    const [showDeativateConfirm,setShowDeativateConfirm]=useState(false)
    
     
     async function handleviewlibrarian(){
@@ -92,6 +94,11 @@ function ViewLibrarian({authFetch}){
         setShowActivateConfirm(true)
     }
 
+    function handleDeactivateClick(id) {
+        setSelectedLibrarianId(id)
+        setShowDeativateConfirm(true)
+    }
+
     return(
         <div className="dash-container">
             <AdminSidebar/>
@@ -130,7 +137,7 @@ function ViewLibrarian({authFetch}){
                                 <td>{librarian.branch}</td>
                                 <td>{librarian.is_active ? 'Active' : 'Inactive'}</td>
                                 <td>
-                                    <button className="btn" onClick={() => librarian.is_active ? deactivate(librarian.id):handleActivateClick(librarian.id)}>
+                                    <button className="btn" onClick={() => librarian.is_active ? handleDeactivateClick(librarian.id):handleActivateClick(librarian.id)}>
                                         {librarian.is_active ? 'Deactivate' : 'Activate'}
                                     </button>
                                 </td>
@@ -143,6 +150,8 @@ function ViewLibrarian({authFetch}){
             {showActivateConfirm && (<ConfirmActivatelibrarian onConfirm={async () => {await activate(selectedLibrarianId)
                         setShowActivateConfirm(false)}} onClose={() => setShowActivateConfirm(false)}/>
             )}
+            {showDeativateConfirm && (<ConfirmDeactivateLib onConfirm={async () => {await deactivate(selectedLibrarianId) 
+                setShowDeativateConfirm(false)}} onClose={() => setShowDeativateConfirm(false)}/>)}
        </div>
     )
 }
