@@ -214,4 +214,39 @@ const searchBorrow = async (req, res) => {
     }
 }
 
-module.exports = {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs,searchBorrow}
+const searchMyBorrowHistory = async (req, res) => {
+    try {
+        const user_id = req.user.userID
+        const { name } = req.query
+
+        const query = BorrowRepository
+            .createQueryBuilder('borrow')
+            .leftJoinAndSelect('borrow.book', 'book')
+            .where('borrow.user_id = :user_id', { user_id })
+
+        if (name) {
+            query.andWhere(
+                `(book.book_name ILIKE :term OR borrow.status ILIKE :term OR CAST(borrow.borrow_date AS TEXT) ILIKE :term OR CAST(borrow.fine_amount AS TEXT) ILIKE :term)`,
+                {
+                    term: `%${name}%`
+                }
+            )
+        }
+
+        const records = await query
+            .orderBy('borrow.borrow_date', 'DESC')
+            .getMany()
+
+        res.status(200).json(records)
+
+    } catch (err) {
+        console.log(err)
+
+        res.status(500).json({
+            message: 'Error While Searching Borrow History',
+            error: err.message
+        })
+    }
+}
+
+module.exports = {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs,searchBorrow,searchMyBorrowHistory}

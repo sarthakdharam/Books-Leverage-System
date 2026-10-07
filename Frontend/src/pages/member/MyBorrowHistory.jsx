@@ -9,9 +9,6 @@ function MyBorrowHistory({authFetch}){
 
     const [borrowList,setBorrowList]=useState([])
     
-
-
-
     async function handleborrowhistory(){
 
         try{
@@ -31,13 +28,43 @@ function MyBorrowHistory({authFetch}){
         }
     }
 
+    async function handlesearch(value){
+        try{
+            if(value.trim()===''){
+                handleborrowhistory()
+                return
+            }
+
+            const response=await authFetch(`http://localhost:3000/api/myborrow/search?name=${value}`)
+            const data=await response.json()
+
+            if(!response.ok){
+                toast.error(data.message || 'something failed')
+                return
+            }
+
+            setBorrowList(data)
+
+        }catch(err){
+            console.log(err)
+            toast.error('Something went wrong plese try again')}
+    }
+
     useEffect(()=>{
         handleborrowhistory()
     },[])
+
     return(
         <div className="dash-container">
             <MemberSidebar/>
-            <Header/>                      
+            <Header 
+                showBranding={false} 
+                title="MY BORROWS" 
+                icon='📚'
+                showSearch={true}
+                searchPlaceholder="Search Borrow"
+                onSearch={handlesearch}
+            />                      
                     
             <div className="table-container">
                     <table>
@@ -57,9 +84,9 @@ function MyBorrowHistory({authFetch}){
                                 <tr key={borrow.id}>
                                     <td>{borrow.book?.id}</td>
                                     <td>{borrow.book?.book_name}</td>
-                                    <td>{new Date(borrow.borrow_date).toLocaleDateString()}</td>
-                                    <td>{new Date(borrow.due_date).toLocaleDateString()}</td>
-                                    <td>{borrow.return_date ? new Date(borrow.return_date).toLocaleDateString() : '-'}</td>
+                                    <td>{new Date(borrow.borrow_date).toISOString().split('T')[0]}</td>
+                                    <td>{new Date(borrow.due_date).toISOString().split('T')[0]}</td>
+                                    <td>{borrow.return_date ? new Date(borrow.return_date).toISOString().split('T')[0] : '-'}</td>
                                     <td>{borrow.status}</td>
                                     <td>{borrow.fine_amount}</td>
                                 </tr>
