@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import UpdateMember from "./UpdateMember";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -11,7 +12,7 @@ function UserAccount({authFetch,onClose}){
 
     const [account,setAccount]=useState({})
     const [showUpdate,setShowUpdate]=useState(false)
-
+    const navigate=useNavigate()
     
 
     async function loadaccount(){
@@ -37,6 +38,12 @@ function UserAccount({authFetch,onClose}){
     useEffect(()=>{
         loadaccount()
     },[])
+
+    function handlelogout(){
+        localStorage.clear()
+        return navigate('/login')
+    }
+
     return(
         <div className="modal-overlay1" onClick={onClose}>                     
                    
@@ -63,6 +70,9 @@ function UserAccount({authFetch,onClose}){
                             <div className="info-row">
                                 <span className="info-label">Phone No.</span>
                                 <span className="info-value">{account.phone}</span>
+                            </div>
+                            <div className="logout-btn">
+                                <button className='btn' onClick={handlelogout}>Logout</button>
                             </div>
                         </div>
                 </div>

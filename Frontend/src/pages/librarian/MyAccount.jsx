@@ -3,12 +3,14 @@ import withAuthFetch from "../../HOC/withAuthFetch";
 import { useEffect, useState } from "react";
 import UpdateLibrarian from "./UpdateLibrarian";
 import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 
 function MyAccount({authFetch,onClose}){
 
     const [account,setAccount]=useState({})
     const [showUpdate,setShowUpdate]=useState(false)
+    const navigate=useNavigate()
 
     async function loadaccount(){
             try{
@@ -31,6 +33,11 @@ function MyAccount({authFetch,onClose}){
     useEffect(()=>{
         loadaccount()
     },[])
+
+    function handlelogout(){
+        localStorage.clear()
+        return navigate('/login')
+    }
     return(
         <div className="modal-overlay1" onClick={onClose}>                    
                 
@@ -60,6 +67,9 @@ function MyAccount({authFetch,onClose}){
                             <div className="info-row">
                                 <span className="info-label">Branch</span>
                                 <span className="info-value">{account.branch}</span>
+                            </div>
+                            <div className="logout-btn">
+                                <button className='btn' onClick={handlelogout}>Logout</button>
                             </div>
                         </div>
                 </div>

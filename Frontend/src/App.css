@@ -645,3 +645,8 @@ tr:hover {
     margin: auto;
     
 }
+
+.logout-btn {
+    width: 70px;
+    margin: auto;
+}
