@@ -56,7 +56,8 @@ const getUserdata=async (req,res)=>{
                 email:true,
                 phone:true,         
                 is_active:true       
-            }
+            },
+            order: { id: 'ASC' }
         })
         
         res.status(200).json(userdata)

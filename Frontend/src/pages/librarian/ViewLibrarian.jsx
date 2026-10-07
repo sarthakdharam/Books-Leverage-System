@@ -119,7 +119,6 @@ function ViewLibrarian({authFetch}){
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>UserName</th>
                             <th>Email</th>
@@ -132,7 +131,6 @@ function ViewLibrarian({authFetch}){
                     <tbody>
                         {librarianList.map(librarian=>(
                             <tr key={librarian.id}>
-                                <td>{librarian.id}</td>
                                 <td>{librarian.name}</td>
                                 <td>{librarian.username}</td>
                                 <td>{librarian.email}</td>

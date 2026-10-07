@@ -42,10 +42,6 @@ function MyAccount({authFetch,onClose}){
                     <div className="page-container1">
                         <div key={account.id}>
                             <div className="info-row">
-                                <span className="info-label">ID</span>
-                                <span className="info-value">{account.id}</span>
-                            </div>
-                            <div className="info-row">
                                 <span className="info-label">Username</span>
                                 <span className="info-value">{account.username}</span>
                             </div>

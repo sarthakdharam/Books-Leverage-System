@@ -75,7 +75,7 @@ function ViewBorrow({authFetch , }){
                 searchPlaceholder = "Search Borrow" 
                 onSearch={handlesearch}
                 createtitle="Borrow"
-                onCreate={()=>setShowBorrowBook(true)}
+                onBorrow={()=>setShowBorrowBook(true)}
                 onReduce={()=>setShowReturnBook(true)}
 
             />                      
@@ -84,7 +84,6 @@ function ViewBorrow({authFetch , }){
                     <table>
                         <thead>
                             <tr>
-                                <th>Borrowed Id</th>
                                 <th>Book Name</th>
                                 <th>User Name</th>
                                 <th>Borrow Date</th>
@@ -104,7 +103,6 @@ function ViewBorrow({authFetch , }){
                             ) : (
                             borrowList.map(borrow=>(
                                 <tr key={borrow.id}>
-                                    <td>{borrow.id}</td>
                                     <td>{borrow.book?.book_name}</td>
                                     <td>{borrow.user?.name}</td>
                                     <td>{new Date(borrow.borrow_date).toISOString().split('T')[0]}</td>

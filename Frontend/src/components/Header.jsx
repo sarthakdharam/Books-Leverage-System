@@ -3,6 +3,7 @@ import { FaPlus,FaUserCircle,FaMinus } from "react-icons/fa";
 
 function Header({
     children,
+    onBorrow,
     onCreate,
     createtitle='create account',
     onReduce,
@@ -37,7 +38,8 @@ function Header({
             
             {showSearch && (<input className="header-input" placeholder={searchPlaceholder} title='search here' onChange={(e) => onSearch(e.target.value)}/>)}
             {onCreate && (<button className="create-plus" onClick={onCreate} title={createtitle}><FaPlus /></button>)}
-            {onReduce && (<button className="create-plus" onClick={onReduce} title='return'><FaMinus/></button>)}
+            {onBorrow && (<button className="create-plus1" onClick={onBorrow} title={createtitle}>Borrow</button>)}
+            {onReduce && (<button className="create-plus1" onClick={onReduce} title='return'>Return</button>)}
             {myAccount && (<button className="myaccount-btn" onClick={myAccount} title='My Account'><FaUserCircle size={30} color="#e9dede"/></button>)}
             {children}
         </div>

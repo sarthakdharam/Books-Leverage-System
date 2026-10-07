@@ -136,7 +136,6 @@ function ViewBook({authFetch}){
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Cover</th>
                             <th>Name</th>
                             <th>Author</th>
@@ -151,7 +150,6 @@ function ViewBook({authFetch}){
                     <tbody>
                         {booklist.map(book=>(
                             <tr key={book.id}>
-                                <td>{book.id}</td>
                                 <td>
                                     <img
                                         src={book.book_image || 'https://via.placeholder.com/40x56?text=No+Cover'}
