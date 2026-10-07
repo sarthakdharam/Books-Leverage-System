@@ -54,6 +54,7 @@ function ViewMember({authFetch}){
             setUserList(prevlist=>
                 prevlist.map(b=>b.id===Number(id)? {...b, is_active:false}:b)
             )
+            toast.success('Member Deactivated Successfully')
         }catch(err){
             console.log(err)
             toast.error('User is still active')
@@ -73,6 +74,7 @@ function ViewMember({authFetch}){
             setUserList(prevlist=>
                 prevlist.map(b=>b.id===Number(id)? {...b, is_active:true}:b)
             )
+            toast.success('Member Activated Successfully')
         }catch(err){
             console.log(err)
             toast.error('User is still deactivate')

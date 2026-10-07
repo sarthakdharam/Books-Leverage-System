@@ -42,6 +42,8 @@ function ViewLibrarian({authFetch}){
             setLibrarianList(prevlist=>
                 prevlist.map(b=>b.id===Number(id)? {...b, is_active:false}:b)
             )
+
+            toast.success('Librarian Deactivated Successfully')
         }catch(err){
             console.log(err)
             toast.error('Librarain is still active')
@@ -61,6 +63,7 @@ function ViewLibrarian({authFetch}){
             setLibrarianList(prevlist=>
                 prevlist.map(b=>b.id===Number(id)? {...b, is_active:true}:b)
             )
+            toast.success('Librarian Activated Successfully')
         }catch(err){
             console.log(err)
             toast.error('Librarain is still deactivate')

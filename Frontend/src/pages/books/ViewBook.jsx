@@ -49,6 +49,7 @@ function ViewBook({authFetch}){
             setBookList(prevlist=>
                 prevlist.map(b=>b.id===id? {...b, is_active:false} : b)
             )
+            toast.success('Book Successfully Deactivated')
             
         }catch(err){
             console.log(err)
@@ -72,6 +73,7 @@ function ViewBook({authFetch}){
             setBookList(prevlist=>
                 prevlist.map(b=>b.id===id? {...b, is_active:true} : b)
             )
+            toast.success('Book Successfully Activated')
             
         }catch(err){
             console.log(err)
