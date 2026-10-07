@@ -62,7 +62,7 @@ function ViewMember({authFetch}){
 
     async function activate(id){
         try{
-            const response=await authFetch(`http://localhost:3000/api/users/${id}/deactivate`,{
+            const response=await authFetch(`http://localhost:3000/api/users/${id}/activate`,{
                 method:'PATCH'
             })
             const data=await response.json()
