@@ -3,7 +3,7 @@ const {BookRepository}=require('../repositories/book.repository')
 
 const createBook = async (req,res)=>{
     try{
-        const {book_name, book_author, total_books, category,book_image}=req.body
+        const {book_name, book_author, total_books, category,book_image,book_description}=req.body
         
         if(book_name.trim()===''){
             return res.status(400).json({message:'there should be book name'})
@@ -22,6 +22,9 @@ const createBook = async (req,res)=>{
         }
         if(book_image.trim()===''){
             return res.status(400).json({message:'there should be book image'})
+        }
+        if(book_description.trim()===''){
+            return res.status(400).json({message:'there should be description for book'})
         }
 
         const book=await BookRepository.findOneBy({book_name:book_name})
@@ -73,6 +76,11 @@ const getAllBooks = async (req, res) => {
 
         if (role === 'admin') {
             books = await BookRepository.find({
+                order: { id: 'ASC' }
+            })
+        } else if (role === 'librarian') {
+            books = await BookRepository.find({
+                where: { is_active: true },
                 order: { id: 'ASC' }
             })
         } else {

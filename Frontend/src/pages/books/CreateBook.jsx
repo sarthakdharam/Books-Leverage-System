@@ -10,7 +10,8 @@ function CreateBook({authFetch,onClose,onCreated}){
         book_author:'',
         total_books:0,
         category:'',
-        book_image:''
+        book_image:'',
+        book_description:''
     })
 
     const [error,setError]=useState({})
@@ -41,7 +42,11 @@ function CreateBook({authFetch,onClose,onCreated}){
         }
 
         if(form.book_image.trim()===''){
-            newError.book_image="Enter Book Cover Page Url"
+            newError.book_image="Enter Book Page Url or Upload Image"
+        }
+
+        if(form.book_description.trim()===''){
+            newError.book_description="Enter Description For Book"
         }
 
         if(Object.keys(newError).length>0){
@@ -74,7 +79,8 @@ function CreateBook({authFetch,onClose,onCreated}){
                 book_author:'',
                 total_books:0,
                 category:'',
-                book_image:''
+                book_image:'',
+                book_description:''
             })
 
             setError({})
@@ -117,8 +123,14 @@ function CreateBook({authFetch,onClose,onCreated}){
                     <input className={`form-input ${error.category ? 'input-error' : ''}`} name="category" value={form.category} onChange={handlechange} placeholder="Book Category"/>
                     {error.category && (<p className="field-error">{error.category}</p>)}
                     <h3>BOOK Cover<span className="required">*</span></h3>
+                    <div className="Book-Image">
                     <input className={`form-input ${error.book_image ? 'input-error' : ''}`} name="book_image" value={form.book_image} onChange={handlechange} placeholder="Book Cover Link"/>
+                    <button className="btn5">Upload</button>
+                    </div>
                     {error.book_image && (<p className="field-error">{error.book_image}</p>)}
+                    <h3>BOOK Description<span className="required">*</span></h3>
+                    <input className={`form-input ${error.book_description ? 'input-error' : ''}`} name="book_description" value={form.book_description} onChange={handlechange} placeholder="Book Description"/>
+                    {error.book_description && (<p className="field-error">{error.book_description}</p>)}
                     <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ? (<span className="loader">Submitting...</span>):('Submit')}</button>
                 </form>
             </div>

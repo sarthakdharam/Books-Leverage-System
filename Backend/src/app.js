@@ -37,7 +37,7 @@ app.patch('/api/librarian/myaccount', authenticate, authorize(['librarian']), up
 app.patch('/api/users/myaccount', authenticate, authorize(['user']), updatemyaccount)
 app.get('/api/users/myaccount', authenticate, authorize(['user']), getmyaccount)
 app.get('/api/librarian/myaccount', authenticate, authorize(['librarian']), getlabrarianaccount)
-app.get('/api/books', authenticate, authorize(['admin','librarian']), getAllBooks)
+app.get('/api/books', authenticate, authorize(['admin','librarian','user']), getAllBooks)
 app.patch('/api/books/:id/deactivate', authenticate, authorize(['admin']), deleteBook)
 app.patch('/api/books/:id/activate', authenticate, authorize(['admin']), activateBook)
 app.patch('/api/books/:id', authenticate, authorize(['admin']), updatebook)

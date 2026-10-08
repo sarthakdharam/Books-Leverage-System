@@ -42,7 +42,11 @@ const Book=new EntitySchema({
         book_image: {
             type: 'varchar',
             nullable: false,
-        },               
+        },     
+        book_description:{
+            type:'varchar',
+            nullable:false
+        }          
     }
 })
 module.exports = {Book};
