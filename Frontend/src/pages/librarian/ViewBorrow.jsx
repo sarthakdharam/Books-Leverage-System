@@ -12,6 +12,12 @@ function ViewBorrow({authFetch , }){
     const [borrowList,setBorrowList]=useState([])
     const [showborrowbook,setShowBorrowBook]=useState(false)
     const [showreturnbook,setShowReturnBook]=useState(false)
+    const [page,setPage]=useState(1)
+    const rowsPerPage=8
+    const totalPages = Math.ceil(borrowList.length / rowsPerPage);
+
+    const startIndex = (page - 1) * rowsPerPage;
+    const currentBorrows = borrowList.slice(startIndex, startIndex + rowsPerPage)
 
     async function handleborrowhistory(){
 
@@ -94,14 +100,14 @@ function ViewBorrow({authFetch , }){
                             </tr>
                         </thead>
                         <tbody>
-                            {borrowList.length === 0 ? (
+                            {currentBorrows.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" className="no-data">
                                         No data found
                                     </td>
                                 </tr>
                             ) : (
-                            borrowList.map(borrow=>(
+                            currentBorrows.map(borrow=>(
                                 <tr key={borrow.id}>
                                     <td>{borrow.book?.book_name}</td>
                                     <td>{borrow.user?.name}</td>
@@ -114,6 +120,25 @@ function ViewBorrow({authFetch , }){
                             )))}
                         </tbody>
                     </table>
+                    <div className='Pagination' >
+                    <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    >
+                    Previous
+                    </button>
+
+                    <span style={{ margin: "0 10px" }}>
+                    Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === totalPages}
+                    >
+                    Next
+                    </button>
+            </div>
                 </div>
                 {showborrowbook &&(<BorrowBook authFetch={authFetch} onClose={()=>setShowBorrowBook(false)} onCreated={handleborrowhistory}/>)}
                 {showreturnbook &&(<ReturnBook authFetch={authFetch} onClose={()=>setShowReturnBook(false)} onCreated={handleborrowhistory}/>)}

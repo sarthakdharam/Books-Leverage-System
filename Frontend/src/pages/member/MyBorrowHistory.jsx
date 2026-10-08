@@ -8,6 +8,12 @@ import MemberSidebar from "../../components/MemberSidebar";
 function MyBorrowHistory({authFetch}){
 
     const [borrowList,setBorrowList]=useState([])
+    const [page,setPage]=useState(1)
+    const rowsPerPage=8
+    const totalPages = Math.ceil(borrowList.length / rowsPerPage);
+
+    const startIndex = (page - 1) * rowsPerPage;
+    const currentBorrows = borrowList.slice(startIndex, startIndex + rowsPerPage)
     
     async function handleborrowhistory(){
 
@@ -80,7 +86,7 @@ function MyBorrowHistory({authFetch}){
                             </tr>
                         </thead>
                         <tbody>
-                            {borrowList.map(borrow=>(
+                            {currentBorrows.map(borrow=>(
                                 <tr key={borrow.id}>
                                     <td>{borrow.book?.id}</td>
                                     <td>{borrow.book?.book_name}</td>
@@ -93,6 +99,25 @@ function MyBorrowHistory({authFetch}){
                             ))}
                         </tbody>
                     </table>
+                    <div className='Pagination' >
+                    <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    >
+                    Previous
+                    </button>
+
+                    <span style={{ margin: "0 10px" }}>
+                    Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === totalPages}
+                    >
+                    Next
+                    </button>
+            </div>
                 </div>
             </div>
     )

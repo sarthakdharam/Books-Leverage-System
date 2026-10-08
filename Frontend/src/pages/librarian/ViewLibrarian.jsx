@@ -13,6 +13,12 @@ function ViewLibrarian({authFetch}){
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
     const [selectedLibrarianId, setSelectedLibrarianId] = useState(null)
     const [showDeativateConfirm,setShowDeativateConfirm]=useState(false)
+    const [page,setPage]=useState(1)
+    const rowsPerPage=8
+    const totalPages = Math.ceil(librarianList.length / rowsPerPage);
+
+    const startIndex = (page - 1) * rowsPerPage;
+    const currentlibrarians = librarianList.slice(startIndex, startIndex + rowsPerPage)
    
     
     async function handleviewlibrarian(){
@@ -129,7 +135,7 @@ function ViewLibrarian({authFetch}){
                         </tr>
                     </thead>
                     <tbody>
-                        {librarianList.map(librarian=>(
+                        {currentlibrarians.map(librarian=>(
                             <tr key={librarian.id}>
                                 <td>{librarian.name}</td>
                                 <td>{librarian.username}</td>
@@ -146,6 +152,25 @@ function ViewLibrarian({authFetch}){
                         ))}
                     </tbody>
                 </table>
+                <div className='Pagination' >
+                    <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    >
+                    Previous
+                    </button>
+
+                    <span style={{ margin: "0 10px" }}>
+                    Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === totalPages}
+                    >
+                    Next
+                    </button>
+            </div>
             </div> 
             {showCreateLibrarian && (<CreateLibrarian authFetch={authFetch} onClose={()=>setShowCreateLibrarian(false)} onCreated={handleviewlibrarian}/>)} 
             {showActivateConfirm && (<ConfirmActivatelibrarian onConfirm={async () => {await activate(selectedLibrarianId)

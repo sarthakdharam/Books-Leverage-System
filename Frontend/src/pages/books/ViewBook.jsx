@@ -15,6 +15,13 @@ function ViewBook({authFetch}){
     const [selectedBookId, setSelectedBookId] = useState(null)
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
     const [showDeativateConfirm, setShowDeactivateConfirm] = useState(false)
+    const [page,setPage]=useState(1)
+    const rowsPerPage=8
+    const totalPages = Math.ceil(booklist.length / rowsPerPage);
+
+    const startIndex = (page - 1) * rowsPerPage;
+    const currentBooks = booklist.slice(startIndex, startIndex + rowsPerPage)
+    
    
    
     
@@ -93,6 +100,7 @@ function ViewBook({authFetch}){
                 return
             }
             setBookList(data)
+            setPage(1)
 
         }catch(err){
             console.log(err)
@@ -118,6 +126,7 @@ function ViewBook({authFetch}){
         setShowDeactivateConfirm(true)
     }
 
+    
     return(
         <div className="dash-container">
             <AdminSidebar/>
@@ -148,7 +157,7 @@ function ViewBook({authFetch}){
                         </tr>
                     </thead>
                     <tbody>
-                        {booklist.map(book=>(
+                        {currentBooks.map(book=>(
                             <tr key={book.id}>
                                 <td>
                                     <img
@@ -175,6 +184,25 @@ function ViewBook({authFetch}){
                         ))}
                     </tbody>
                 </table>
+                <div className='Pagination' >
+                    <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    >
+                    Previous
+                    </button>
+
+                    <span style={{ margin: "0 10px" }}>
+                    Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === totalPages}
+                    >
+                    Next
+                    </button>
+            </div>
             </div>  
             {showCreateBook && (<CreateBook authFetch={authFetch} onClose={()=>setShowCreateBook(false)} onCreated={handleviewbook}/>)}
             {showUpdateBook && (<Updatebook authFetch={authFetch} bookId={selectedBookId} onClose={()=>setShowUpdateBook(false)} onCreated={handleviewbook}/>)}

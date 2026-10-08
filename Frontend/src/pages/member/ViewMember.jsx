@@ -15,6 +15,12 @@ function ViewMember({authFetch}){
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
     const [selectedUserId, setSelectedUserId] = useState(null)
     const [showDeativateConfirm,setShowDeativateConfirm]=useState(false)
+    const [page,setPage]=useState(1)
+    const rowsPerPage=10
+    const totalPages = Math.ceil(userList.length / rowsPerPage);
+
+    const startIndex = (page - 1) * rowsPerPage;
+    const currentUser = userList.slice(startIndex, startIndex + rowsPerPage)
    
     
     async function handleviewuser(){
@@ -145,7 +151,7 @@ function ViewMember({authFetch}){
                         </tr>
                     </thead>
                     <tbody>
-                        {userList.map(user=>(
+                        {currentUser.map(user=>(
                             <tr key={user.id}>
                                 <td>👤</td>
                                 <td>{user.name}</td>
@@ -162,6 +168,25 @@ function ViewMember({authFetch}){
                         ))}
                     </tbody>
                 </table>}
+                <div className='Pagination' >
+                    <button
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 1}
+                    >
+                    Previous
+                    </button>
+
+                    <span style={{ margin: "0 10px" }}>
+                    Page {page} of {totalPages}
+                    </span>
+
+                    <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === totalPages}
+                    >
+                    Next
+                    </button>
+            </div>
             </div>  
 
             {showCreateUser && (<CreateMember authFetch={authFetch}  onClose={()=> setShowCreateUser(false)} onCreated={handleviewuser}/>)}
