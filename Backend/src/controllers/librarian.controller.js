@@ -222,4 +222,17 @@ const searchLibrarian = async (req, res) => {
     }
 }
 
-module.exports={createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,activatelabrarian,deletelabrarian,getLibrarianStats,searchLibrarian}
+const getBranches = async (req, res) => {
+    try {
+        const branches = await librarianRepository.find({
+            order: { branch: 'ASC' }
+        })
+
+        res.status(200).json(branches)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: 'Error fetching branches'})
+    }
+}
+
+module.exports={createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,activatelabrarian,deletelabrarian,getLibrarianStats,searchLibrarian,getBranches}

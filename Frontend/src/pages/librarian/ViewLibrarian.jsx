@@ -9,16 +9,21 @@ import ConfirmDeactivateLib from "./ConfirmDeactivateLib"
 
 function ViewLibrarian({authFetch}){
     const [librarianList,setLibrarianList]=useState([])
-    const [showCreateLibrarian,setShowCreateLibrarian]=useState()
+    const [showCreateLibrarian,setShowCreateLibrarian]=useState(false)
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
     const [selectedLibrarianId, setSelectedLibrarianId] = useState(null)
     const [showDeativateConfirm,setShowDeativateConfirm]=useState(false)
+    const [selectedBranch, setSelectedBranch] = useState('')
     const [page,setPage]=useState(1)
     const rowsPerPage=8
-    const totalPages = Math.ceil(librarianList.length / rowsPerPage);
+    const filteredBranch = librarianList.filter(librarian =>
+        selectedBranch === "" || librarian.branch === selectedBranch
+    )
+    const totalPages = Math.ceil(filteredBranch.length / rowsPerPage)
 
-    const startIndex = (page - 1) * rowsPerPage;
-    const currentlibrarians = librarianList.slice(startIndex, startIndex + rowsPerPage)
+    const startIndex = (page - 1) * rowsPerPage
+    const currentlibrarians = filteredBranch.slice(startIndex,startIndex + rowsPerPage)
+    
    
     
     async function handleviewlibrarian(){
@@ -112,6 +117,7 @@ function ViewLibrarian({authFetch}){
         <div className="dash-container">
             <AdminSidebar/>
             <Header 
+            authFetch={authFetch}
                 showBranding={false}
                 title="LIBRARIAN"
                 icon="👨🏽‍💼"
@@ -119,6 +125,12 @@ function ViewLibrarian({authFetch}){
                 searchPlaceholder="Search Librarian"
                 onSearch={handlesearch}
                 onCreate={() => setShowCreateLibrarian(true)}
+                showBranch={true}
+                selectedBranch={selectedBranch}
+                onBranchChange={(branch)=>{
+                    setSelectedBranch(branch)
+                    setPage(1)
+                }}
                 />                      
                     
             <div className="table-container">

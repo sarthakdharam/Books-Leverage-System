@@ -1,6 +1,9 @@
 import logo from '../assets/logo.png'
 import { FaPlus,FaUserCircle } from "react-icons/fa"; 
 import { BookCategory } from '../constant/BookCategory';
+import { useEffect, useState } from 'react';
+import authFetch from '../utils/authFetch';
+import { toast } from 'react-toastify';
 
 function Header({
     children,
@@ -17,9 +20,37 @@ function Header({
     selectedCategory='',
     showBranding = true,
     title = "Books Leverage System",
-    icon
+    icon,
+    showBranch = false,
+    selectedBranch = "",
+    onBranchChange,
+    authFetch
 }){
+    const [branches, setBranches] = useState([])
 
+    async function handleBranch(){
+        try{
+            const response=await authFetch('http://localhost:3000/api/librarian/branches')
+            const data=await response.json()
+            if(!response.ok){
+                toast.error('Somethinf went wrong while fetching')
+                return
+            }
+            const UniqueBranches=[...new Set(data
+                .map(librarian=>librarian.branch)
+                .filter(Boolean)
+            )].sort()
+            setBranches(UniqueBranches)
+        }catch(err){
+            console.log(err)
+            toast.error('Something went wrong,Try again')
+        }
+    }
+
+    useEffect(()=>{
+        if(!showBranch) return
+        handleBranch()
+    },[showBranch,authFetch])
 
     return (
     <header className='app-header'>
@@ -47,6 +78,15 @@ function Header({
                 </option>
             ))}
             </select>
+            )}
+            {showBranch && (<select className="header-category" value={selectedBranch} onChange={(e) => onBranchChange(e.target.value)}>
+                <option value="">All Branches</option>
+                    {branches.map(branch => (
+                        <option key={branch} value={branch}>
+                            {branch}
+                        </option>
+                    ))}
+                </select>
             )}
             {showSearch && (<input className="header-input" placeholder={searchPlaceholder} title='search here' onChange={(e) => onSearch(e.target.value)}/>)}
             {onCreate && (<button className="create-plus" onClick={onCreate} title={createtitle}><FaPlus /></button>)}
