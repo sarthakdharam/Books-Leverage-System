@@ -29,6 +29,13 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
             toast.error('Phone number should be 10 digits')
             return
         }
+        const passwordvalid=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=])[A-Za-z\d@$!%*?&#^()_+\-=]{8,}$/
+        if(password){
+            if(!passwordvalid.test(password)){
+                toast.error('use 8+ character with Uppercase,Lowercase,Number and Special Character')
+                return
+            }
+        }
         setIsSubmitting(true)
 
         try{

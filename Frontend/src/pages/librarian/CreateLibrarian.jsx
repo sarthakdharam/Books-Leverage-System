@@ -52,6 +52,11 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
 
         if(form.password.trim()===''){
             newError.password='Enter Password'
+        }else{
+            const passwordvalid=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=])[A-Za-z\d@$!%*?&#^()_+\-=]{8,}$/
+            if (!passwordvalid.test(form.password.trim())) {
+                newError.password=`use 8+ character with Uppercase,Lowercase,Number and Special Character`
+            }
         }
         
 
@@ -114,7 +119,7 @@ function CreateLibrarian({authFetch,onCreated,onClose}){
                     
             <div className="page-container modal-form" onClick={(e) => e.stopPropagation()}>     
                 <div className="form-header"><h3>Create Librarian</h3> 
-                <button type="button" className="close-btn" onClick={onClose} title="close">×</button>
+                <button type="button" className="close-btn1" onClick={onClose} title="close">×</button>
             </div>  
                 <form onSubmit={handleCreate}>
                     <h4>Librarian Name<span className="required">*</span></h4>    

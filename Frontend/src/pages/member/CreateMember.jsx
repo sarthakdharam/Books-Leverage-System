@@ -52,6 +52,11 @@ function Createuser({authFetch,onClose,onCreated}){
 
         if(form.password.trim()===''){
             newError.password='Enter Password'
+        }else{
+            const passwordvalid=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=])[A-Za-z\d@$!%*?&#^()_+\-=]{8,}$/
+            if (!passwordvalid.test(form.password.trim())) {
+                newError.password=`use 8+ character with Uppercase,Lowercase,Number and Special Character`
+            }
         }
 
         if(Object.keys(newError).length>0){
