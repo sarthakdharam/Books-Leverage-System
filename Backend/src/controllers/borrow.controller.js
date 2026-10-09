@@ -182,7 +182,18 @@ const getBorrowLogs = async (req, res) => {
             return {...record,fine_amount:currentFine}
         })
 
-        res.status(200).json(updatedRecords)
+        const visibleRecord=updatedRecords.filter(record=>{
+            if(record.status==='borrowed'){
+                return true
+            }
+            if(record.status==='returned' && record.return_date){
+                const hourseSinceReturn=(today-new Date(record.return_date))/(1000*60*60)
+                return hourseSinceReturn < 720
+            }
+            return false
+        })
+
+        res.status(200).json(visibleRecord)
 
     } catch (err) {
         console.log(err)
