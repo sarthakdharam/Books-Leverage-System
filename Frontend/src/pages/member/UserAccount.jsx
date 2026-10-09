@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import UpdateMember from "./UpdateMember";
 import { useNavigate } from "react-router-dom";
+import myuser from "../../assets/user_default.png"
 
 
 
@@ -55,6 +56,10 @@ function UserAccount({authFetch,onClose}){
                 <div className="page-container1">
                     
                         <div key={account.id}>
+                            <div className="info-row">
+                                <span className="info-label">Profile</span>
+                                <img src={account?.user_photo || myuser} alt="User Photo" className="user-logo"/>
+                            </div>
                             <div className="info-row">
                                 <span className="info-label">Username</span>
                                 <span className="info-value">{account.username}</span>

@@ -43,6 +43,10 @@ const User=new EntitySchema({
         is_active:{
             type:'boolean',
             default:true,
+        },
+        user_photo:{
+            type:'bytea',
+            nullable:true
         }
     },
         relations:{                  

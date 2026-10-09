@@ -1,16 +1,20 @@
 import logo from '../assets/logo.png'
-import { FaPlus,FaUserCircle,FaMinus } from "react-icons/fa"; 
+import { FaPlus,FaUserCircle } from "react-icons/fa"; 
+import { BookCategory } from '../constant/BookCategory';
 
 function Header({
     children,
     onBorrow,
     onCreate,
+    onCategoryChange,
     createtitle='create account',
     onReduce,
     myAccount,
     showSearch = false,
     searchPlaceholder = "Search",
     onSearch,
+    showCategory=false,
+    selectedCategory='',
     showBranding = true,
     title = "Books Leverage System",
     icon
@@ -35,7 +39,15 @@ function Header({
         </div>
         <div className='header-actions'>
 
-            
+            {showCategory && (<select className="header-category" value={selectedCategory} onChange={(e) => onCategoryChange(e.target.value)}>
+            <option value="">All Categories</option>
+            {BookCategory.map(category => (
+                <option key={category} value={category}>
+                    {category}
+                </option>
+            ))}
+            </select>
+            )}
             {showSearch && (<input className="header-input" placeholder={searchPlaceholder} title='search here' onChange={(e) => onSearch(e.target.value)}/>)}
             {onCreate && (<button className="create-plus" onClick={onCreate} title={createtitle}><FaPlus /></button>)}
             {onBorrow && (<button className="create-plus1" onClick={onBorrow} title={createtitle}>Borrow</button>)}

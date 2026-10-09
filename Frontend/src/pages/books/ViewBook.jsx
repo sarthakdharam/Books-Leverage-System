@@ -7,6 +7,7 @@ import AdminSidebar from "../../components/Adminsidebar"
 import Updatebook from "./Updatebook"
 import ConfirmActivate from "./ConfirmActivate"
 import ConfirmDeactivate from "./ConfirmDeactivate"
+import { BookCategory } from "../../constant/BookCategory"
 
 function ViewBook({authFetch}){
     const [booklist,setBookList]=useState([])
@@ -15,12 +16,16 @@ function ViewBook({authFetch}){
     const [selectedBookId, setSelectedBookId] = useState(null)
     const [showActivateConfirm, setShowActivateConfirm] = useState(false)
     const [showDeativateConfirm, setShowDeactivateConfirm] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState("")
     const [page,setPage]=useState(1)
     const rowsPerPage=8
-    const totalPages = Math.ceil(booklist.length / rowsPerPage);
+    const filteredBooks = booklist.filter(book =>
+        selectedCategory === "" || book.category === selectedCategory
+    )
+    const totalPages = Math.ceil(filteredBooks.length / rowsPerPage)
 
-    const startIndex = (page - 1) * rowsPerPage;
-    const currentBooks = booklist.slice(startIndex, startIndex + rowsPerPage)
+    const startIndex = (page - 1) * rowsPerPage
+    const currentBooks = filteredBooks.slice(startIndex,startIndex + rowsPerPage)
     
    
    
@@ -91,7 +96,11 @@ function ViewBook({authFetch}){
     async function  handlesearch(searchTerm){
 
         try{
-
+            if(searchTerm.trim()===''){
+                await handleviewbook()
+                setPage(1)
+                return
+            }
             const response=await authFetch(`http://localhost:3000/api/books/search?book_name=${searchTerm}`)
             const data=await response.json()
 
@@ -139,7 +148,13 @@ function ViewBook({authFetch}){
                 searchPlaceholder="Search Books"
                 onSearch={handlesearch}
                 onCreate={() => setShowCreateBook(true)}
-            />                      
+                showCategory={true}
+                selectedCategory={selectedCategory}
+                onCategoryChange={(category) => {
+                    setSelectedCategory(category)
+                    setPage(1)
+                }}    
+            />                  
                     
             <div className="table-container">
                 <table>
@@ -184,24 +199,24 @@ function ViewBook({authFetch}){
                         ))}
                     </tbody>
                 </table>
-                <div className='Pagination' >
-                    <button
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                    >
+                <div className="Pagination">
+                <button
+                    onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                    disabled={page === 1 || totalPages === 0}
+                >
                     Previous
-                    </button>
+                </button>
 
-                    <span style={{ margin: "0 10px" }}>
-                    Page {page} of {totalPages}
-                    </span>
+                <span style={{ margin: "0 10px" }}>
+                    Page {totalPages === 0 ? 0 : page} of {totalPages}
+                </span>
 
-                    <button
-                    onClick={() => setPage(page + 1)}
-                    disabled={page === totalPages}
-                    >
+                <button
+                    onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={page >= totalPages || totalPages === 0}
+                >
                     Next
-                    </button>
+                </button>
             </div>
             </div>  
             {showCreateBook && (<CreateBook authFetch={authFetch} onClose={()=>setShowCreateBook(false)} onCreated={handleviewbook}/>)}

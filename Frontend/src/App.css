@@ -703,3 +703,62 @@ tr:hover {
 .book-cover .category-label {
     justify-content: flex-start; 
 }
+
+.user-logo {
+    height: 43px;
+    width: 45px;
+    object-fit: contain;
+}
+
+select.form-input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #414e67;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+select.form-input:focus {
+    border-color: #698bb4;
+    box-shadow: 0 0 0 2px rgba(105, 139, 180, 0.15);
+}
+
+select.form-input.form-input.input-error {
+    border-color: red;
+}
+select.form-input option {
+    padding: 6px;
+    font-size: 14px;
+    background-color: white;
+    border: 1px;
+    border-color: #698bb4;
+}
+
+.header-category {
+    width: 170px;
+    height: 38px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    color: #414e67;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+}
+
+.header-category:focus {
+    border-color: #698bb4;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}

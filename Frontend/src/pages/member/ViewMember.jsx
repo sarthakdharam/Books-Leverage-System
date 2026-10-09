@@ -7,6 +7,10 @@ import LibrarianSidebar from "../../components/Librariansidebar"
 import ConfirmActivatemember from "./ConfirmActivatemember"
 import ConfirmDeactivateMember from "./ConfirmDeactivateMember"
 import { FaToggleOff, FaToggleOn } from "react-icons/fa"
+import myuser from "../../assets/user_default.png"
+
+
+
 
 function ViewMember({authFetch}){
     const [userList,setUserList]=useState([])
@@ -153,7 +157,9 @@ function ViewMember({authFetch}){
                     <tbody>
                         {currentUser.map(user=>(
                             <tr key={user.id}>
-                                <td>👤</td>
+                                <td>
+                                    <img src={user?.user_photo || myuser} alt="User Photo" className="user-logo"/>
+                                </td>
                                 <td>{user.name}</td>
                                 <td>{user.username}</td>
                                 <td>{user.email}</td>

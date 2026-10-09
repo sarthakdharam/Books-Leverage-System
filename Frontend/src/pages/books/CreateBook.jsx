@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { toast } from "react-toastify"
 import withAuthFetch from "../../HOC/withAuthFetch"
+import { BookCategory } from "../../constant/BookCategory"
 
 
 function CreateBook({authFetch,onClose,onCreated}){
@@ -37,8 +38,8 @@ function CreateBook({authFetch,onClose,onCreated}){
             newError.total_books="Quantity of Book Should Be Atleast 1"
         }
 
-        if(form.category.trim()===''){
-            newError.category="Enter Book Category"
+        if(!form.category){
+            newError.category="Please Select Category"
         }
 
         if(form.book_image.trim()===''){
@@ -119,8 +120,13 @@ function CreateBook({authFetch,onClose,onCreated}){
                     <h3>TOTAL BOOK<span className="required">*</span></h3>
                     <input className={`form-input ${error.total_books ? 'input-error' : ''}`} name="total_books" value={form.total_books} type="number" onChange={handlechange} placeholder="Total Books"/>
                     {error.total_books && (<p className="field-error">{error.total_books}</p>)}
-                    <h3>BOOK Category<span className="required">*</span></h3>
-                    <input className={`form-input ${error.category ? 'input-error' : ''}`} name="category" value={form.category} onChange={handlechange} placeholder="Book Category"/>
+                    <h3>CATEGORY<span className="required">*</span></h3>
+                    <select className={`form-input ${error.category ? 'input-error' : ''}`} name="category" value={form.category} onChange={handlechange}>
+                        <option value=''>Select Category</option>
+                        {BookCategory.map(category=>(
+                            <option key={category} value={category}>{category}</option>
+                        ))}
+                    </select>
                     {error.category && (<p className="field-error">{error.category}</p>)}
                     <h3>BOOK Cover<span className="required">*</span></h3>
                     <div className="Book-Image">
