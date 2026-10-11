@@ -14,7 +14,9 @@ function CreateBook({authFetch,onClose,onCreated}){
         book_image:'',
         book_description:''
     })
-
+    const [coverFile, setCoverFile] = useState(null)
+    const [coverPreview, setCoverPreview] = useState('')
+    const [coverMethod, setCoverMethod] = useState('url')
     const [error,setError]=useState({})
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -42,8 +44,8 @@ function CreateBook({authFetch,onClose,onCreated}){
             newError.category="Please Select Category"
         }
 
-        if(form.book_image.trim()===''){
-            newError.book_image="Enter Book Page Url or Upload Image"
+        if (!form.book_image.trim() && !coverFile) {
+            newError.book_image = "Enter Book Page Url or Upload Image"
         }
 
         if(form.book_description.trim()===''){
@@ -60,10 +62,33 @@ function CreateBook({authFetch,onClose,onCreated}){
 
         
         try{
+            let bookImageUrl = form.book_image.trim()
+
+            if (coverFile) {
+                const imageFormData = new FormData()
+
+                imageFormData.append('file', coverFile)
+                imageFormData.append('upload_preset',import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+                const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                    {
+                        method: 'POST',
+                        body: imageFormData
+                    })
+
+                const uploadedImage = await uploadResponse.json()
+
+                if (!uploadResponse.ok) {
+                    throw new Error(
+                        uploadedImage.error?.message || 'Book cover upload failed'
+                    )
+                }
+
+                bookImageUrl = uploadedImage.secure_url
+            }
             const response=await authFetch('http://localhost:3000/api/books',
                 {
                     method:'POST',
-                    body:JSON.stringify({...form,available_books:Number(form.total_books)})
+                    body: JSON.stringify({...form,book_image: bookImageUrl,available_books: Number(form.total_books)})
                 }
             )
 
@@ -83,14 +108,16 @@ function CreateBook({authFetch,onClose,onCreated}){
                 book_image:'',
                 book_description:''
             })
-
+            setCoverFile(null)
+            setCoverPreview('')
+            setCoverMethod('url')
             setError({})
             onCreated()
             onClose()
             
         }catch(err){
             console.log(err)
-            toast.error('somethiong went wrong,try Again')
+            toast.error(err.message || 'somethiong went wrong,try Again')
         }finally{
             setIsSubmitting(false)
         }
@@ -128,10 +155,23 @@ function CreateBook({authFetch,onClose,onCreated}){
                         ))}
                     </select>
                     {error.category && (<p className="field-error">{error.category}</p>)}
+                    <div>
                     <h3>BOOK Cover<span className="required">*</span></h3>
-                    <div className="Book-Image">
-                    <input className={`form-input ${error.book_image ? 'input-error' : ''}`} name="book_image" value={form.book_image} onChange={handlechange} placeholder="Book Cover Link"/>
-                    <button className="btn5">Upload</button>
+                    <input className="form-input" name="book_image" value={form.book_image} onChange={(e) => {
+                        handlechange(e)
+                        setCoverFile(null)
+                        setCoverPreview('')
+                        setCoverMethod('url')}}
+                        placeholder="Paste Book Cover URL"/>
+                    <p>Or upload a cover image</p>
+                    <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => {const file = e.target.files?.[0]
+                    if (!file) return
+                    setCoverFile(file)
+                    setCoverMethod('upload')
+                    setCoverPreview(URL.createObjectURL(file))
+                    setForm(prev => ({ ...prev, book_image: '' }))
+                    setError(prev => ({ ...prev, book_image: '' }))}}/>
+                    {coverPreview && (<img src={coverPreview} alt="Book Cover Preview" style={{ width: '80px', height: '110px', objectFit: 'cover' }}/>)}
                     </div>
                     {error.book_image && (<p className="field-error">{error.book_image}</p>)}
                     <h3>BOOK Description<span className="required">*</span></h3>

@@ -41,5 +41,6 @@ export const BookCategory = [
   "Comics / Graphic Novels",
   "Humor",
   "Sports",
+  "Non-Fiction",
   "Others",
 ];
