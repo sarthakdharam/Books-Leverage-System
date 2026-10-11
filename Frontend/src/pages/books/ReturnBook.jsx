@@ -42,7 +42,7 @@ function ReturnBook({authFetch,onClose,onCreated}){
         try {
 
             const response = await authFetch(
-                `http://localhost:3000/api/users/search?name=${value}`
+                `http://localhost:3000/api/users/search-username?username=${value}`
             )
 
             const data = await response.json()
@@ -65,7 +65,7 @@ function ReturnBook({authFetch,onClose,onCreated}){
 
      async function selectUser(user) {
 
-        setUserSearch(user.name)
+        setUserSearch(user.username)
 
         setForm(prev => ({
             ...prev,
@@ -177,12 +177,13 @@ function ReturnBook({authFetch,onClose,onCreated}){
             </div>
                 <form onSubmit={handlereturn}>
                     <div className="book-search-container">
-                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} value={userSearch} onChange={(e)=>searchUsers(e.target.value)} placeholder="Search User Name" autoComplete="off"/>
+                    <input className={`form-input ${error.user_id ? 'input-error' : ''}`} value={userSearch} onChange={(e)=>searchUsers(e.target.value)} placeholder="Search Username" autoComplete="off"/>
                     {userSuggestions.length > 0 && (
                         <div className="book-suggestions">
                             {userSuggestions.map(user=>(
                                 <div key={user.id} className="book-suggestion" onClick={()=>selectUser(user)}>
-                                    <div className="book-name">{user.name}</div>
+                                    <div className="book-name">{user.username}</div>
+                                    <div>{user.name}</div>
                                 </div>
                             ))}
                         </div>

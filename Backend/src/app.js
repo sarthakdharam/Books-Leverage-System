@@ -1,7 +1,7 @@
 require("dotenv").config();
 const {AppDataSource}=require('./config/database')
 const express=require('express')
-const {createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers,activateuser}=require('./controllers/user.controller')
+const {createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers,activateuser,searchUsersByUsername}=require('./controllers/user.controller')
 const {createBook,searchBooks,updatebook,deleteBook,getAllBooks,activateBook}=require('./controllers/book.controller')
 const {BorrowBook,returnbook,getmybrowserhistory,getBorrowLogs,searchBorrow,searchMyBorrowHistory}=require('./controllers/borrow.controller')
 const {createlibrarian,getlibrariandata,updatelabrarian,getlabrarianaccount,activatelabrarian,deletelabrarian,getLibrarianStats,searchLibrarian,getBranches}=require('./controllers/librarian.controller')
@@ -52,6 +52,7 @@ app.get('/api/borrow/search',authenticate,authorize(['librarian']),searchBorrow)
 app.get('/api/librarian/search',authenticate,authorize(['admin']),searchLibrarian)
 app.get('/api/myborrow/search',authenticate,authorize(['user']),searchMyBorrowHistory)
 app.get('/api/librarian/branches',authenticate,authorize(['admin']),getBranches)
+app.get('/api/users/search-username',authenticate,authorize(['librarian']),searchUsersByUsername)
 
 async function start(){
     try{

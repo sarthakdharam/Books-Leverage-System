@@ -188,4 +188,37 @@ const searchUsers = async (req, res) => {
         res.status(500).json({ message: 'Error Searching Users', error: err.message })
     }
 }
-module.exports={createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers,activateuser}
+
+const searchUsersByUsername = async (req, res) => {
+    try {
+        const { username } = req.query
+
+        if (!username?.trim()) {
+            return res.status(200).json([])
+        }
+
+        const users = await userRepository
+            .createQueryBuilder('user')
+            .select([
+                'user.id',
+                'user.name',
+                'user.username'
+            ])
+            .where('user.username ILIKE :username', {
+                username: `%${username.trim()}%`
+            })
+            .andWhere('user.is_active = :active', {
+                active: true
+            })
+            .orderBy('user.username', 'ASC')
+            .getMany()
+
+        return res.status(200).json(users)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: 'Error searching users by username'
+        })
+    }
+}
+module.exports={createUser,getUserdata,updatemyaccount,getmyaccount,deleteuser,searchUsers,activateuser,searchUsersByUsername}

@@ -131,7 +131,8 @@ const getmybrowserhistory=async(req,res)=>{
                     id: true,
                     book_name: true,
                     book_author: true,
-                    category: true
+                    category: true,
+                    book_image:true
                 }
             },
             order:{borrow_date:'DESC'}

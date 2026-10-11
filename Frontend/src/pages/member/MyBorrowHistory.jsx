@@ -76,7 +76,7 @@ function MyBorrowHistory({authFetch}){
                     <table>
                         <thead>
                             <tr>
-                                <th>Book Id</th>
+                                <th>Book Cover</th>
                                 <th>Book Name</th>
                                 <th>Borrow Date</th>
                                 <th>Due Date</th>
@@ -88,7 +88,9 @@ function MyBorrowHistory({authFetch}){
                         <tbody>
                             {currentBorrows.map(borrow=>(
                                 <tr key={borrow.id}>
-                                    <td>{borrow.book?.id}</td>
+                                    <td>
+                                        <img src={borrow.book?.book_image} className="book-thumb" />
+                                    </td>
                                     <td>{borrow.book?.book_name}</td>
                                     <td>{new Date(borrow.borrow_date).toISOString().split('T')[0]}</td>
                                     <td>{new Date(borrow.due_date).toISOString().split('T')[0]}</td>
