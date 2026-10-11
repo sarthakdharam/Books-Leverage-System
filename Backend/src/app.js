@@ -10,6 +10,7 @@ const {refreshAccessToken}=require('./controllers/auth.controller')
 const {authenticate}=require('./middleware/authentication.middleware')
 const {authorize}=require('./middleware/authorize.middleware')
 const {getstats}=require('./controllers/stats.controller')
+const {upload}=require('./middleware/upload.middleware')
 const cors=require('cors')
 
 const app=express();
@@ -34,7 +35,7 @@ app.get('/api/borrow/logs', authenticate, authorize(['librarian']), getBorrowLog
 app.get('/api/users/logs',authenticate, authorize(['librarian']), getUserdata)
 app.get('/api/librarian/logs',authenticate, authorize(['admin']), getlibrariandata)
 app.patch('/api/librarian/myaccount', authenticate, authorize(['librarian']), updatelabrarian)
-app.patch('/api/users/myaccount', authenticate, authorize(['user']), updatemyaccount)
+app.patch('/api/users/myaccount', authenticate, authorize(['user']),upload.single('user_photo'), updatemyaccount)
 app.get('/api/users/myaccount', authenticate, authorize(['user']), getmyaccount)
 app.get('/api/librarian/myaccount', authenticate, authorize(['librarian']), getlabrarianaccount)
 app.get('/api/books', authenticate, authorize(['admin','librarian','user']), getAllBooks)

@@ -46,6 +46,7 @@ function UserAccount({authFetch,onClose}){
     }
 
     return(
+        <>
         <div className="modal-overlay1" onClick={onClose}>                     
                    
             <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
@@ -82,8 +83,9 @@ function UserAccount({authFetch,onClose}){
                         </div>
                 </div>
             </div>
-            {showUpdate && (<UpdateMember authFetch={authFetch} onClose={()=>setShowUpdate(false)} onCreated={loadaccount}/>)}
         </div>
+            {showUpdate && (<UpdateMember onClose={()=>setShowUpdate(false)} onCreated={loadaccount}/>)}
+        </>
     )
 }
 export default withAuthFetch(UserAccount)

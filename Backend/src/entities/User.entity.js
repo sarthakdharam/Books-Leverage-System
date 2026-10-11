@@ -47,6 +47,10 @@ const User=new EntitySchema({
         user_photo:{
             type:'bytea',
             nullable:true
+        },
+        user_photo_mime: {
+            type: 'varchar',
+            nullable: true
         }
     },
         relations:{                  

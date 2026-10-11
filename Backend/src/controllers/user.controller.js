@@ -86,6 +86,10 @@ const updatemyaccount=async (req,res)=>{
         if (password) {
             user.password = await bcrypt.hash(password, 10)
         }
+        if (req.file) {
+            user.user_photo = req.file.buffer
+            user.user_photo_mime = req.file.mimetype
+        }
 
         const updatedUser = await userRepository.save(user)
         const { password: _, ...userWithoutPassword } = updatedUser
@@ -110,13 +114,16 @@ const getmyaccount=async (req,res)=>{
                 username:true,
                 email:true,
                 phone:true, 
+                user_photo:true,
+                user_photo_mime:true
             }               
         })
 
         if(!user){
             return res.status(404).json({ message: 'User Not Found' })
         }
-        res.status(200).json(user)
+        const photo = user.user_photo? `data:${user.user_photo_mime};base64,${user.user_photo.toString('base64')}`: null
+        res.status(200).json({...user, user_photo: photo})
 
     }catch(err){
         console.log(err)
