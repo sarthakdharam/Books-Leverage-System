@@ -45,6 +45,7 @@ function SearchBook({authFetch}){
                 <div className="book-grid">
                     {search.map(book => (
                         <div className="book-card" key={book.id} onClick={() =>handleBookClick(book.id)}>
+                            <span className="book-category-badge">{book.category}</span>
                             <img
                                 src={book.book_image || 'https://via.placeholder.com/160x220?text=No+Cover'}
                                 alt={book.book_name}
@@ -52,7 +53,6 @@ function SearchBook({authFetch}){
                             />
                             <h4 className="book-title">{book.book_name}</h4>
                             <p className="book-author">{book.book_author}</p>
-                            <span className="book-category">{book.category}</span>
                         </div>
                     ))}
                 </div>    

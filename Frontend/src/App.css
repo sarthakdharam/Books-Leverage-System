@@ -160,6 +160,7 @@ tr:hover {
 }
 
 .book-card {
+    position: relative;
     border: 1px solid #eee;
     border-radius: 10px;
     padding: 10px;
@@ -761,4 +762,46 @@ select.form-input option {
     align-items: center;
     gap: 12px;
     margin-left: auto;
+}
+
+.page-card{
+    position: relative;
+}
+
+.book-category-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 5;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    padding: 5px 9px;
+    background: #25ebc4;
+    color: #000000;    
+    font-size: 11px;
+    font-weight: 600;
+    max-width: calc(100% -16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-category-badge1 {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    padding: 5px 9px;
+    background: #e2ff04;
+    color: #000000;    
+    font-size: 15px;
+    font-weight: 600;
+    max-width: calc(100% -16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
