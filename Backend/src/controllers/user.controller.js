@@ -45,7 +45,7 @@ const getUserdata=async (req,res)=>{
         if(!librarian){
             return res.status(404).json({ message: 'Librarian Not Found' })
         }
-        const userdata=await userRepository.find({
+        const users=await userRepository.find({
             where:{
                 librarian:{id:librarian_id}
             },            
@@ -55,11 +55,13 @@ const getUserdata=async (req,res)=>{
                 username:true,
                 email:true,
                 phone:true,         
-                is_active:true       
+                is_active:true,
+                user_photo:true       
             },
             order: { id: 'ASC' }
         })
         
+        const userdata=users.map(user=>({...user,user_photo:user.user_photo? `data:image/png;base64,${Buffer.from(user.user_photo).toString('base64')}`: null }))
         res.status(200).json(userdata)
             
     }catch(err){
