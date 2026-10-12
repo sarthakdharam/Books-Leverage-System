@@ -42,5 +42,10 @@ export const BookCategory = [
   "Humor",
   "Sports",
   "Non-Fiction",
+  "Dystopian",
+  "Productivity",
+  "Computer Science",
+  "Thriller",
   "Others",
-];
+].sort((a,b)=>a.localeCompare(b));
+

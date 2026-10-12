@@ -7,7 +7,6 @@ import AdminSidebar from "../../components/Adminsidebar"
 import Updatebook from "./Updatebook"
 import ConfirmActivate from "./ConfirmActivate"
 import ConfirmDeactivate from "./ConfirmDeactivate"
-import { BookCategory } from "../../constant/BookCategory"
 
 function ViewBook({authFetch}){
     const [booklist,setBookList]=useState([])
