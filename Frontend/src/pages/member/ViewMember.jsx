@@ -59,7 +59,7 @@ function ViewMember({authFetch}){
             })
             const data=await response.json()
             if(!response.ok){
-                toast.error('Error while fetching')
+                toast.error(data.message || 'Error while fetching')
                 return
             }
             setUserList(prevlist=>

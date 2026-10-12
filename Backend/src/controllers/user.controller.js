@@ -2,6 +2,7 @@ const {userRepository}=require('../repositories/user.repository')
 const {AdminRepository}=require('../repositories/admin.repository')
 const bcrypt=require('bcrypt')
 const {librarianRepository}=require('../repositories/librarian.repository')
+const {BorrowRepository}=require('../repositories/borrow.repository')
 
 const createUser = async (req,res)=>{
     try{
@@ -142,7 +143,16 @@ const deleteuser=async (req,res)=>{
         if(!user){
             return res.status(404).json({message:'User Not Found'})
         }
+        const activeborrowed=await BorrowRepository.findOne({
+            where:{
+                user: {id:Number(id)},
+                status:'borrowed'
+            }
+        })
 
+        if(activeborrowed){
+            return res.status(409).json({message:'Can not deactivate this member because user has not returned a books'})
+        }
         user.is_active=false
         await userRepository.save(user)
 
