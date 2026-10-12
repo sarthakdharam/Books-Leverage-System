@@ -81,11 +81,12 @@ const updatelabrarian=async (req,res)=>{
         }
 
 
-        const  {name,email,phone,password}=req.body
+        const  {name,email,phone,branch,password}=req.body
 
         if(name) labrarian.name=name
         if(email) labrarian.email=email
         if(phone) labrarian.phone=phone
+        if(branch) labrarian.branch=branch
         if(password){
             labrarian.password=await bcrypt.hash(password,10)
         }

@@ -8,6 +8,7 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
     const [phone,setPhone]=useState('')
+    const [branch,setBranch]=useState('')
     const [password,setPassword]=useState('')
     const [isSubmitting,setIsSubmitting]=useState(false)
 
@@ -42,7 +43,7 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
 
             const response=await authFetch('http://localhost:3000/api/librarian/myaccount',{
                 method:'PATCH',
-                body:JSON.stringify({name,email,phone,password})
+                body:JSON.stringify({name,email,phone,branch,password})
             })
             const data=await response.json()
 
@@ -80,6 +81,7 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
             setName(data.name)
             setEmail(data.email)
             setPhone(data.phone)
+            setBranch(data.branch)
             setPassword(data.password)
             
 
@@ -95,7 +97,7 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
     
 
     return(
-        <div className="modal-overlay1" onClick={onClose}>
+        <div className="modal-overlay2" onClick={onClose}>
                       
             <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
                 <div className="form-header"><h3>Update Info</h3> 
@@ -108,11 +110,12 @@ function UpdateLibrarian({authFetch,onClose,onCreated}){
                     <input className="form-input" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Enter Updating email"/>
                     <h3>Phone No.</h3>
                     <input className="form-input" value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder="Enter Updating phone"/>
+                    <h3>Branch</h3>
+                    <input className="form-input" value={branch} onChange={(e)=>setBranch(e.target.value)} placeholder="Enter Updating branch"/>
                     <h3>Password</h3>
                     <input className="form-input" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter Update password"/>
                     <br/>
                     <button className="btn" type="submit" disabled={isSubmitting}>{isSubmitting ?(<span className="loader">Submitting...</span>):('Submit')}</button>
-                    
                 </form>
             </div>
         </div>

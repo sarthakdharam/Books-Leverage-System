@@ -35,15 +35,16 @@ function BookPage({authFetch,id,onClose}){
                 <div className="form-header"><h3>BOOK DETAILS</h3> 
                 <button type="button" className="close-btn1" onClick={onClose} title="close">×</button>
             </div>
+            <h2>{description.book_name}</h2>
             <div className="page-card">
             <span className="book-category-badge1">{description.category}</span>
             <img
                 src={description.book_image || 'https://via.placeholder.com/160x220?text=No+Cover'}
                 className="book-cover"
-            />   
-            <h4 className="book-title">{description.book_name}</h4>
+            />
             <p className="book-author">{description.book_author}</p>
-            <p>{description.book_description}</p>
+            <h4 className="page-tags">Book Description :</h4>
+            <p className="page-description">{description.book_description}</p>
             </div>     
             </div>    
         </div>

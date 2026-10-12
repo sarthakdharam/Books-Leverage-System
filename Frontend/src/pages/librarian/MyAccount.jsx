@@ -39,6 +39,7 @@ function MyAccount({authFetch,onClose}){
         return navigate('/login')
     }
     return(
+        <>
         <div className="modal-overlay1" onClick={onClose}>                    
                 
             <div className="page-container modal-form1" onClick={(e) => e.stopPropagation()}>     
@@ -75,8 +76,9 @@ function MyAccount({authFetch,onClose}){
                 </div>
                 </div>
             
-            {showUpdate && (<UpdateLibrarian authFetch={authFetch} onClose={()=>setShowUpdate(false)} onCreated={loadaccount}/>)}
         </div>
+            {showUpdate && (<UpdateLibrarian authFetch={authFetch} onClose={()=>setShowUpdate(false)} onCreated={loadaccount}/>)}
+        </>
     )
 }
 export default withAuthFetch(MyAccount)

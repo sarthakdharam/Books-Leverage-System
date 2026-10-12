@@ -180,7 +180,7 @@ tr:hover {
 }
 
 .book-author {
-    margin: 0 0 8px 0;
+    margin: 10px 0 10px 0;
     color: #6b7280;
     font-size: 13px;
 }
@@ -775,6 +775,17 @@ select.form-input option {
 
 .page-card{
     position: relative;
+}
+
+.page-description{
+    border: 1px solid #e2ff04;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.page-tags {
+    text-align: start;
+    margin: 0px 10px 0px 10px;
 }
 
 .book-category-badge {
